@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-func (d *Delay) Handler()  {
+func (d *Delay) Handler() {
 	var lastDelayTs int64
 	d.QueueRange(func(u *Unit) (bool, bool) {
 		if lastDelayTs != 0 && u.CallTs-lastDelayTs > 1 {
@@ -13,7 +13,7 @@ func (d *Delay) Handler()  {
 		}
 
 		if u.F != nil {
-			u.F(u.Arg)
+			u.F(u.CallTs, u.Arg)
 		}
 		lastDelayTs = u.CallTs
 		return true, true

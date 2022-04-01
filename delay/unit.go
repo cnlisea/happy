@@ -7,11 +7,11 @@ import (
 type Unit struct {
 	DelayTime time.Duration
 	CallTs    int64
-	F         func(arg interface{})
+	F         func(ts int64, arg interface{})
 	Arg       interface{}
 }
 
-func (d *Delay) Unit(delayTime time.Duration, f func(args interface{}), arg interface{}) {
+func (d *Delay) Unit(delayTime time.Duration, f func(ts int64, args interface{}), arg interface{}) {
 	if f == nil {
 		return
 	}

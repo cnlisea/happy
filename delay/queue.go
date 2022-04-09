@@ -2,6 +2,7 @@ package delay
 
 import (
 	"container/list"
+	"time"
 )
 
 func (d *Delay) QueueLen() int {
@@ -49,27 +50,56 @@ func (d *Delay) QueueAdd(unit *Unit) {
 	}
 }
 
-func (d *Delay) QueueRange(f func(unit *Unit) (bool, bool)) {
+func (d *Delay) QueueRangeDel(f func(unit *Unit) (bool, bool)) {
 	if f == nil || d.QueueLen() == 0 {
 		return
 	}
 
 	var (
-		e        = d.queue.Front()
+		front    = d.queue.Front()
+		e        = front
 		nextE    *list.Element
 		unit     *Unit
 		con, del bool
+		frontDel bool
 	)
 	for e != nil {
 		nextE = e.Next()
 		unit = e.Value.(*Unit)
 		con, del = f(unit)
 		if del {
+			if e == front {
+				frontDel = true
+			}
 			d.queue.Remove(e)
 		}
 		if !con {
 			break
 		}
 		e = nextE
+	}
+
+	if frontDel {
+		d.timer.Stop()
+		d.QueueRange(func(u *Unit) bool {
+			d.timer.Reset(time.Duration(u.CallTs - time.Now().UnixNano()))
+			return false
+		})
+	}
+}
+
+func (d *Delay) QueueRange(f func(unit *Unit) bool) {
+	if f == nil || d.QueueLen() == 0 {
+		return
+	}
+
+	var (
+		e    *list.Element
+		unit *Unit
+	)
+	for e = d.queue.Front(); e != nil; e = e.Next() {
+		if unit = e.Value.(*Unit); !f(unit) {
+			break
+		}
 	}
 }

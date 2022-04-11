@@ -19,8 +19,10 @@ func (h *Happy) MsgHandler(msg *proxy.Msg) {
 		h.MsgPlayerExitHandler(msg.UserKey)
 	case proxy.MsgKindDisband:
 		// 申请解散
+		h.MsgDisbandHandler(msg.UserKey)
 	case proxy.MsgKindDisbandReject:
 		// 拒绝解散
+		h.MsgDisbandRejectHandler(msg.UserKey)
 	case proxy.MsgKindDisbandIdle:
 		// 解散房间
 		if h.curRound > 0 {

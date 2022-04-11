@@ -22,6 +22,8 @@ type Happy struct {
 	event  *Event
 	plugin *Plugin
 
+	playerMsg PlayerMsg
+
 	vote *vote.Vote
 
 	ownerUserKey interface{}

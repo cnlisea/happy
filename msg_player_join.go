@@ -96,6 +96,11 @@ func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 		existPlayer = p
 	}
 
+	// clean player delay msg
+	if exist {
+		h.DelayMsgClean(userKey)
+	}
+
 	h.pMgr.Add(userKey, existPlayer)
 	h.game.PlayerJoin(userKey, view)
 	h.game.PlayerOp(userKey, view)

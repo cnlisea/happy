@@ -49,6 +49,36 @@ func New(ctx context.Context) *Happy {
 	}
 }
 
+func (h *Happy) Init() error {
+	h.pMgr.Watch(pmgr.WatchKindLine, func(key interface{}, p *player.Player) {
+		if h.event != nil && h.event.PlayerLine != nil {
+			h.event.PlayerLine(key, h.pMgr, h.extend)
+		}
+	})
+	h.pMgr.Watch(pmgr.WatchKindReady, func(key interface{}, p *player.Player) {
+		if h.event != nil && h.event.PlayerReady != nil {
+			h.event.PlayerReady(key, h.pMgr, h.extend)
+		}
+	})
+	h.pMgr.Watch(pmgr.WatchKindOp, func(key interface{}, p *player.Player) {
+		if h.event != nil && h.event.PlayerOp != nil {
+			h.event.PlayerOp(key, h.pMgr, h.extend)
+		}
+	})
+	h.pMgr.Watch(pmgr.WatchKindAuto, func(key interface{}, p *player.Player) {
+		if h.event != nil && h.event.PlayerAuto != nil {
+			h.event.PlayerAuto(key, h.pMgr, h.extend)
+		}
+	})
+	h.pMgr.Watch(pmgr.WatchKindScore, func(key interface{}, p *player.Player) {
+		if h.event != nil && h.event.PlayerScore != nil {
+			h.event.PlayerScore(key, h.pMgr, h.extend)
+		}
+	})
+
+	return nil
+}
+
 func (h *Happy) Run(resume bool) {
 	defer func() {
 		err := recover()

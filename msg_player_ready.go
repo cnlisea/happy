@@ -17,10 +17,6 @@ func (h *Happy) MsgPlayerReadyHandler(userKey interface{}) {
 	}
 
 	p.SetReady(!p.Ready())
-	if h.event != nil && h.event.PlayerReady != nil {
-		h.event.PlayerReady(userKey, h.pMgr, h.extend)
-	}
-
 	if h.roundBeginPolicy == RoundBeginPolicyAllPlayerReady {
 		var allReady = true
 		h.pMgr.Range(func(key interface{}, p *player.Player) bool {

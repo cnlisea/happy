@@ -27,4 +27,11 @@ func (p *Player) AddScore(score int32) {
 		p.score = list.New()
 	}
 	p.score.PushBack(score)
+	if f := p.watch["score"]; f != nil {
+		f(p)
+	}
+}
+
+func (p *Player) WatchScore(f func(*Player)) {
+	p.watch["score"] = f
 }

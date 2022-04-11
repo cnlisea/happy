@@ -9,10 +9,13 @@ type Player struct {
 	score     *list.List // 分数
 
 	extend map[string]interface{} // 扩展信息
+
+	watch map[string]func(*Player)
 }
 
 func New() *Player {
 	return &Player{
 		extend: make(map[string]interface{}),
+		watch:  make(map[string]func(*Player)),
 	}
 }

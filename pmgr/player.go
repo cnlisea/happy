@@ -42,10 +42,68 @@ func (pm *PMgr) Add(key interface{}, p *player.Player) {
 		}
 	}
 
-	pm.players.PushBack(&Player{
-		Player: p,
-		key:    key,
-	})
+	var (
+		newPlayer = &Player{
+			Player: p,
+			key:    key,
+		}
+		kind  WatchKind
+		watch Watch
+	)
+	for kind, watch = range pm.watch {
+		switch kind {
+		case WatchKindLine:
+			newPlayer.WatchLine(func(key interface{}, watch Watch) func(p *player.Player) {
+				return func(p *player.Player) {
+					watch(key, p)
+				}
+			}(key, watch))
+		case WatchKindReady:
+			newPlayer.WatchReady(func(key interface{}, watch Watch) func(p *player.Player) {
+				return func(p *player.Player) {
+					watch(key, p)
+				}
+			}(key, watch))
+		case WatchKindOp:
+			newPlayer.WatchOp(func(key interface{}, watch Watch) func(p *player.Player) {
+				return func(p *player.Player) {
+					watch(key, p)
+				}
+			}(key, watch))
+		case WatchKindView:
+			newPlayer.WatchView(func(key interface{}, watch Watch) func(p *player.Player) {
+				return func(p *player.Player) {
+					watch(key, p)
+				}
+			}(key, watch))
+		case WatchKindAuto:
+			newPlayer.WatchAuto(func(key interface{}, watch Watch) func(p *player.Player) {
+				return func(p *player.Player) {
+					watch(key, p)
+				}
+			}(key, watch))
+		case WatchKindLocation:
+			newPlayer.WatchLocation(func(key interface{}, watch Watch) func(p *player.Player) {
+				return func(p *player.Player) {
+					watch(key, p)
+				}
+			}(key, watch))
+		case WatchKindScore:
+			newPlayer.WatchScore(func(key interface{}, watch Watch) func(p *player.Player) {
+				return func(p *player.Player) {
+					watch(key, p)
+				}
+			}(key, watch))
+		case WatchKindExtend:
+			newPlayer.WatchExtend(func(key interface{}, watch Watch) func(p *player.Player) {
+				return func(p *player.Player) {
+					watch(key, p)
+				}
+			}(key, watch))
+		}
+	}
+
+	pm.players.PushBack(newPlayer)
 }
 
 func (pm *PMgr) Del(key interface{}) {

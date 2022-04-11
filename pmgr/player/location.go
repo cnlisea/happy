@@ -13,4 +13,11 @@ func (p *Player) Location() *Location {
 
 func (p *Player) SetLocation(location *Location) {
 	p.location = location
+	if f := p.watch["location"]; f != nil {
+		f(p)
+	}
+}
+
+func (p *Player) WatchLocation(f func(*Player)) {
+	p.watch["location"] = f
 }

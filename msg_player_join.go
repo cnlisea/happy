@@ -94,6 +94,9 @@ func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 		}
 
 		existPlayer = p
+		if h.costMode == CostModeJoin && h.event != nil && h.event.Cost != nil {
+			h.event.Cost(h.costMode, h.pMgr, h.extend)
+		}
 	}
 
 	// clean player delay msg
@@ -106,5 +109,9 @@ func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 	h.game.PlayerOp(userKey, view)
 	if h.event != nil && h.event.PlayerJoinSuccess != nil {
 		h.event.PlayerJoinSuccess(userKey, h.pMgr, exist, h.extend)
+	}
+
+	if !exist && h.roundBeginPolicy == RoundBeginPolicyFullPlayer {
+		h.RoundBegin(false)
 	}
 }

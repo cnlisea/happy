@@ -5,6 +5,7 @@ import (
 	"github.com/cnlisea/happy/delay"
 	"github.com/cnlisea/happy/heartbeat"
 	"github.com/cnlisea/happy/pmgr"
+	"github.com/cnlisea/happy/pmgr/player"
 	"github.com/cnlisea/happy/proxy"
 	"github.com/cnlisea/happy/vote"
 	"time"
@@ -17,12 +18,16 @@ type Happy struct {
 	pMgr      *pmgr.PMgr
 	extend    map[string]interface{}
 
-	msgChan chan *proxy.MsgKind
+	msgChan chan *proxy.Msg
 
 	event  *Event
 	plugin *Plugin
 
-	playerMsg PlayerMsg
+	playerMsg proxy.PlayerMsg
+
+	costMode CostMode
+
+	roundBeginPolicy RoundBeginPolicy
 
 	vote *vote.Vote
 
@@ -56,9 +61,22 @@ func (h *Happy) Run(resume bool) {
 	}()
 
 	if resume {
-		// TODO resume
+		time.Sleep(200 * time.Millisecond)
+		if h.playerMsg != nil {
+			userKeys := make([]interface{}, 0, h.pMgr.Len())
+			h.pMgr.Range(func(key interface{}, p *player.Player) bool {
+				userKeys = append(userKeys, key)
+				return true
+			})
+			h.playerMsg.ReConn(h.ctx, userKeys)
+		}
+		if h.begin {
+			h.begin = false
+			h.curRound--
+			h.RoundBegin(true)
+		}
 	}
-
+	h.Loop(0)
 }
 
 func (h *Happy) Loop(timeout time.Duration) {

@@ -1,12 +1,9 @@
 package happy
 
-import "context"
+import (
+	"github.com/cnlisea/happy/proxy"
+)
 
-type PlayerMsg interface {
-	Send(ctx context.Context, userKey []interface{}, data ...interface{}) error
-	ReConn(ctx context.Context, userKey []interface{}) error
-}
-
-func (h *Happy) PlayerMsg(msg PlayerMsg) {
+func (h *Happy) PlayerMsg(msg proxy.PlayerMsg) {
 	h.playerMsg = msg
 }

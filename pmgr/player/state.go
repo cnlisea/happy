@@ -13,12 +13,12 @@ func (p *Player) Online() {
 	p.offlineTs = 0
 }
 
-func (p *Player) Op() bool {
+func (p *Player) Ready() bool {
 	return p.state&1 == 1
 }
 
-func (p *Player) SetOp(b bool) {
-	if p.Op() == b {
+func (p *Player) SetReady(b bool) {
+	if p.Ready() == b {
 		return
 	}
 
@@ -29,12 +29,12 @@ func (p *Player) SetOp(b bool) {
 	}
 }
 
-func (p *Player) View() bool {
+func (p *Player) Op() bool {
 	return p.state&2 == 2
 }
 
-func (p *Player) SetView(b bool) {
-	if p.View() == b {
+func (p *Player) SetOp(b bool) {
+	if p.Op() == b {
 		return
 	}
 
@@ -45,8 +45,24 @@ func (p *Player) SetView(b bool) {
 	}
 }
 
-func (p *Player) Auto() bool {
+func (p *Player) View() bool {
 	return p.state&4 == 4
+}
+
+func (p *Player) SetView(b bool) {
+	if p.View() == b {
+		return
+	}
+
+	if b {
+		p.state |= 4
+	} else {
+		p.state ^= 4
+	}
+}
+
+func (p *Player) Auto() bool {
+	return p.state&8 == 8
 }
 
 func (p *Player) SetAuto(b bool) {
@@ -55,8 +71,8 @@ func (p *Player) SetAuto(b bool) {
 	}
 
 	if b {
-		p.state |= 4
+		p.state |= 8
 	} else {
-		p.state ^= 4
+		p.state ^= 8
 	}
 }

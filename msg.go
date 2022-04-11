@@ -17,6 +17,8 @@ func (h *Happy) MsgHandler(msg *proxy.Msg) {
 		}
 	case proxy.MsgKindPlayerExit:
 		h.MsgPlayerExitHandler(msg.UserKey)
+	case proxy.MsgKindPlayerReady:
+		h.MsgPlayerReadyHandler(msg.UserKey)
 	case proxy.MsgKindDisband:
 		// 申请解散
 		h.MsgDisbandHandler(msg.UserKey)

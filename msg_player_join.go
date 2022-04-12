@@ -41,7 +41,7 @@ func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 					pLocation := p.Location()
 					if pLocation == nil || pLocation.Ip == "" {
 						if h.event != nil && h.event.PlayerJoinFail != nil {
-							h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationIpSame, h.extend)
+							h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationOff, h.extend)
 						}
 						return
 					}
@@ -95,7 +95,7 @@ func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 
 		existPlayer = p
 		if h.costMode == CostModeJoin && h.event != nil && h.event.Cost != nil {
-			h.event.Cost(h.costMode, h.pMgr, h.extend)
+			h.event.Cost(h.costMode, false, h.pMgr, h.extend)
 		}
 	}
 

@@ -25,7 +25,7 @@ type Event struct {
 	PlayerOp          func(key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerAuto        func(key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerScore       func(key interface{}, mgr *pmgr.PMgr, extend map[string]interface{})
-	Cost              func(mode CostMode, pMgr *pmgr.PMgr, extend map[string]interface{})
+	Cost              func(mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{})
 	DisbandAgree      func(ts int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool)
 	DisbandReject     func(userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool)
 	DisbandFull       func(pMgr *pmgr.PMgr, op map[interface{}]bool)

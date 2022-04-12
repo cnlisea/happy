@@ -2,6 +2,14 @@ package player
 
 import "time"
 
+func (p *Player) Line() bool {
+	return p.offlineTs == 0
+}
+
+func (p *Player) OfflineTs() int64 {
+	return p.offlineTs
+}
+
 func (p *Player) Offline(ts int64) {
 	if ts <= 0 {
 		ts = time.Now().Unix()

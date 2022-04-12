@@ -54,6 +54,9 @@ func (h *Happy) Init() error {
 		if h.event != nil && h.event.PlayerLine != nil {
 			h.event.PlayerLine(key, h.pMgr, h.extend)
 		}
+
+		// 玩家踢出
+		h.PlayerKickOut(key)
 	})
 	h.pMgr.Watch(pmgr.WatchKindReady, func(key interface{}, p *player.Player) {
 		if h.event != nil && h.event.PlayerReady != nil {

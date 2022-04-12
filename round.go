@@ -24,6 +24,12 @@ func (h *Happy) RoundBegin(resume bool) {
 		p.SetReady(false)
 		return true
 	})
+
+	// clean player kick out
+	if h.curRound == 0 {
+		h.PlayerKickOutClean()
+	}
+
 	h.begin = true
 	h.curRound++
 	if h.event != nil && h.event.RoundBegin != nil {
@@ -31,7 +37,7 @@ func (h *Happy) RoundBegin(resume bool) {
 	}
 	if !resume && h.costMode == CostModeFirstRoundBegin || h.costMode == CostModeRoundBegin {
 		if h.event != nil && h.event.Cost != nil {
-			h.event.Cost(h.costMode, h.pMgr, h.extend)
+			h.event.Cost(h.costMode, false, h.pMgr, h.extend)
 		}
 	}
 	h.game.Begin()
@@ -49,7 +55,7 @@ func (h *Happy) RoundEnd() {
 
 	if h.costMode == CostModeFirstRoundEnd || h.costMode == CostModeRoundEnd {
 		if h.event != nil && h.event.Cost != nil {
-			h.event.Cost(h.costMode, h.pMgr, h.extend)
+			h.event.Cost(h.costMode, false, h.pMgr, h.extend)
 		}
 	}
 	h.game.End()

@@ -8,8 +8,12 @@ func (h *Happy) Finish(disband bool) {
 
 	if h.costMode == CostModeFinish {
 		if h.event != nil && h.event.Cost != nil {
-			h.event.Cost(h.costMode, h.pMgr, h.extend)
+			h.event.Cost(h.costMode, false, h.pMgr, h.extend)
 		}
+	}
+
+	if h.curRound == 0 && h.costMode == CostModeJoin && h.event != nil && h.event.Cost != nil {
+		h.event.Cost(h.costMode, true, h.pMgr, h.extend)
 	}
 
 	if h.msgChan != nil {

@@ -5,6 +5,12 @@ import (
 	"time"
 )
 
+type GameAuto struct {
+	AutoTs    time.Duration
+	ReadyOpTs time.Duration
+	OpTs      time.Duration
+}
+
 type Game interface {
 	Init(pMgr *pmgr.PMgr, pMsg PlayerMsg) error
 	PlayerMaxNum() int
@@ -12,8 +18,10 @@ type Game interface {
 	PlayerOp(userKey interface{}, view bool)
 	PlayerExit(userKey interface{}, view bool)
 	PlayerOfflineKickOut() time.Duration
+	PlayerAuto(userKey interface{})
 	Begin()
 	End()
+	Auto() *GameAuto
 	View() bool
 	DisbandTs() int64
 	IpLimit() bool

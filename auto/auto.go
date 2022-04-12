@@ -60,7 +60,16 @@ func (a *Auto) Add(key interface{}, op bool) {
 					a.cb.AutoAfter(auto.key)
 				}
 			}
-			a.Add(key, true)
+			var exist bool
+			a.Range(func(auto *_AutoDelay) bool {
+				if auto.key == key && auto.Op {
+					exist = true
+				}
+				return !exist
+			})
+			if !exist {
+				a.Add(key, true)
+			}
 		}
 	}, &_AutoDelay{
 		key: key,
@@ -81,6 +90,17 @@ func (a *Auto) AutoTs(key interface{}, op bool) time.Duration {
 		return ret == 0
 	})
 	return ret
+}
+
+func (a *Auto) Range(f func(auto *_AutoDelay) bool) {
+	var (
+		auto *_AutoDelay
+		ok   bool
+	)
+	a.delayProxy.Range(func(ts int64, args interface{}) bool {
+		auto, ok = args.(*_AutoDelay)
+		return !ok || f(auto)
+	})
 }
 
 func (a *Auto) Del(key interface{}) {

@@ -32,7 +32,8 @@ type Happy struct {
 
 	auto *auto.Auto
 
-	vote *vote.Vote
+	disbandVote *vote.Vote
+	vote        *vote.Vote
 
 	ownerUserKey interface{}
 

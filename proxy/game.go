@@ -23,7 +23,7 @@ type Game interface {
 	End()
 	Auto() *GameAuto
 	View() bool
-	DisbandTs() int64
+	DisbandTs() time.Duration
 	IpLimit() bool
 	DistanceLimit() int
 	Finish(disband bool)

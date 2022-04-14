@@ -144,7 +144,7 @@ func (h *Happy) Init() error {
 		}
 	})
 
-	return h.game.Init(h.pMgr, h.playerMsg)
+	return h.game.Init(h.ctx, h, h.pMgr, h.playerMsg)
 }
 
 func (h *Happy) Run(resume bool) {

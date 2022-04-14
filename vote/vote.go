@@ -11,13 +11,14 @@ type Vote struct {
 	full    bool
 	fullEnd bool
 
-	passFn []func()
-	failFn []func()
-	addFn  []func(key interface{}, agree bool)
+	passFn []func(ts int64)
+	failFn []func(ts int64)
+	addFn  []func(ts time.Duration, deadlineTs int64, key interface{}, agree bool)
 
 	delay         proxy.Delay
 	deadline      bool
 	deadlineTs    time.Duration
+	deadlineEndTs int64
 	deadlinePass  bool
 	deadlineFirst bool
 	deadlineDelay bool
@@ -38,15 +39,15 @@ func (v *Vote) FullEnd() {
 	v.fullEnd = true
 }
 
-func (v *Vote) CallbackPass(f ...func()) {
+func (v *Vote) CallbackPass(f ...func(ts int64)) {
 	v.passFn = f
 }
 
-func (v *Vote) CallbackFail(f ...func()) {
+func (v *Vote) CallbackFail(f ...func(ts int64)) {
 	v.failFn = f
 }
 
-func (v *Vote) CallbackAdd(f ...func(key interface{}, agree bool)) {
+func (v *Vote) CallbackAdd(f ...func(ts time.Duration, deadlineTs int64, key interface{}, agree bool)) {
 	v.addFn = f
 }
 
@@ -67,9 +68,9 @@ func (v *Vote) deadlineDelayAdd() {
 		return
 	}
 
-	v.delay.Add(v.deadlineTs, func(ts int64, args interface{}) {
+	v.deadlineEndTs = v.delay.Add(v.deadlineTs, func(ts int64, args interface{}) {
 		vote := args.(*Vote)
-		vote.Full(true)
+		vote.Full(true, ts)
 	}, v)
 	v.deadlineDelay = true
 }
@@ -87,6 +88,7 @@ func (v *Vote) deadlineDelayDel() {
 		vote, ok = args.(*Vote)
 		return ok && vote == v
 	})
+	v.deadlineEndTs = 0
 	v.deadlineDelay = false
 }
 
@@ -110,13 +112,13 @@ func (v *Vote) Add(key interface{}, agree bool) {
 	}
 
 	for i := range v.addFn {
-		v.addFn[i](key, agree)
+		v.addFn[i](v.deadlineTs, v.deadlineEndTs, key, agree)
 	}
 
-	v.Full(false)
+	v.Full(false, time.Now().UnixNano())
 }
 
-func (v *Vote) Full(deadline bool) {
+func (v *Vote) Full(deadline bool, ts int64) {
 	if v.full {
 		return
 	}
@@ -138,14 +140,17 @@ func (v *Vote) Full(deadline bool) {
 	}
 
 	v.full = true
+	if ts <= 0 {
+		ts = time.Now().UnixNano()
+	}
 	switch {
 	case agreeLen == fullAgreeLen, deadline && v.deadlinePass:
 		for i := range v.passFn {
-			v.passFn[i]()
+			v.passFn[i](ts)
 		}
 	default:
 		for i := range v.failFn {
-			v.failFn[i]()
+			v.failFn[i](ts)
 		}
 	}
 }

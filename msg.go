@@ -44,5 +44,6 @@ func (h *Happy) MsgHandler(msg *proxy.Msg) {
 	case proxy.MsgKindGame:
 		h.MsgGameHandler(msg.UserKey, msg.Data)
 	case proxy.MsgKindByUser:
+		h.MsgByUserHandler(msg.UserKey, msg.Data)
 	}
 }

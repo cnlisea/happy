@@ -19,7 +19,8 @@ type Happy struct {
 	pMgr      *pmgr.PMgr
 	extend    map[string]interface{}
 
-	msgChan chan *proxy.Msg
+	msgChan       chan *proxy.Msg
+	byUserHandler func(userKey interface{}, data interface{}, delay proxy.Delay, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{})
 
 	event  *Event
 	plugin *Plugin

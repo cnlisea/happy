@@ -33,7 +33,7 @@ type Happy struct {
 	auto *auto.Auto
 
 	disbandVote *vote.Vote
-	vote        *vote.Vote
+	quickVote   *vote.Vote
 
 	ownerUserKey interface{}
 
@@ -171,7 +171,7 @@ func (h *Happy) Run(resume bool) {
 		if h.begin {
 			h.begin = false
 			h.curRound--
-			h.RoundBegin(true)
+			h.RoundBegin(true, false)
 		}
 	}
 	h.Loop(0)

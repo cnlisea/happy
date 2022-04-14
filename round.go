@@ -15,7 +15,7 @@ func (h *Happy) RoundBeginPolicy(policy RoundBeginPolicy) {
 	h.roundBeginPolicy = policy
 }
 
-func (h *Happy) RoundBegin(resume bool) {
+func (h *Happy) RoundBegin(resume bool, quick bool) {
 	if h.begin {
 		return
 	}
@@ -40,7 +40,7 @@ func (h *Happy) RoundBegin(resume bool) {
 			h.event.Cost(h.costMode, false, h.pMgr, h.extend)
 		}
 	}
-	h.game.Begin()
+	h.game.Begin(quick)
 }
 
 func (h *Happy) RoundEnd() {

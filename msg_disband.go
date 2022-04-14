@@ -3,6 +3,7 @@ package happy
 import (
 	"github.com/cnlisea/happy/pmgr/player"
 	"github.com/cnlisea/happy/vote"
+	"time"
 )
 
 func (h *Happy) MsgDisbandHandler(userKey interface{}) {
@@ -15,12 +16,24 @@ func (h *Happy) MsgDisbandHandler(userKey interface{}) {
 	}
 
 	if h.disbandVote == nil {
-		gamePlayerLen := h.pMgr.Len(func(p *player.Player) bool {
-			return !p.View()
-		})
-		h.disbandVote = vote.New(gamePlayerLen, gamePlayerLen)
-		h.disbandVote.Deadline(h.delay, h.game.DisbandTs(), false, true)
-		h.disbandVote.CallbackPass(func() {
+		var (
+			gamePlayerLen = h.pMgr.Len(func(p *player.Player) bool {
+				return !p.View()
+			})
+			minNum = gamePlayerLen
+		)
+		if h.plugin != nil && h.plugin.DisbandMinAgreeNum != nil {
+			if minNum = h.plugin.DisbandMinAgreeNum(gamePlayerLen); minNum <= 0 {
+				minNum = gamePlayerLen
+			}
+		}
+		h.disbandVote = vote.New(minNum, gamePlayerLen)
+		var pass bool
+		if h.plugin != nil && h.plugin.DisbandDeadlinePass != nil {
+			pass = h.plugin.DisbandDeadlinePass(h.extend)
+		}
+		h.disbandVote.Deadline(h.delay, h.game.DisbandTs(), pass, true)
+		h.disbandVote.CallbackPass(func(ts int64) {
 			if h.event != nil && h.event.DisbandPass != nil {
 				gameNum := h.pMgr.Len(func(p *player.Player) bool {
 					return !p.View()
@@ -36,11 +49,11 @@ func (h *Happy) MsgDisbandHandler(userKey interface{}) {
 					op[key] = o
 					return true
 				})
-				h.event.DisbandPass(h.pMgr, op)
+				h.event.DisbandPass(ts, h.pMgr, op, h.extend)
 			}
 			h.Finish(true)
 		})
-		h.disbandVote.CallbackFail(func() {
+		h.disbandVote.CallbackFail(func(ts int64) {
 			if h.event != nil && h.event.DisbandFail != nil {
 				gameNum := h.pMgr.Len(func(p *player.Player) bool {
 					return !p.View()
@@ -56,10 +69,10 @@ func (h *Happy) MsgDisbandHandler(userKey interface{}) {
 					op[key] = o
 					return true
 				})
-				h.event.DisbandFail(h.pMgr, op)
+				h.event.DisbandFail(ts, h.pMgr, op, h.extend)
 			}
 		})
-		h.disbandVote.CallbackAdd(func(key interface{}, agree bool) {
+		h.disbandVote.CallbackAdd(func(ts time.Duration, deadlineTs int64, key interface{}, agree bool) {
 			if h.event == nil || (agree && h.event.DisbandAgree == nil) || (!agree && h.event.DisbandReject == nil) {
 				return
 			}
@@ -79,9 +92,9 @@ func (h *Happy) MsgDisbandHandler(userKey interface{}) {
 			})
 			switch agree {
 			case true:
-				h.event.DisbandAgree(h.game.DisbandTs(), userKey, h.pMgr, op)
+				h.event.DisbandAgree(ts, deadlineTs, userKey, h.pMgr, op, h.extend)
 			default:
-				h.event.DisbandReject(userKey, h.pMgr, op)
+				h.event.DisbandReject(ts, deadlineTs, userKey, h.pMgr, op, h.extend)
 			}
 		})
 	}

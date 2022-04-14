@@ -8,6 +8,8 @@ const (
 	MsgKindPlayerReady                  // 玩家准备
 	MsgKindDisband                      // 申请解散
 	MsgKindDisbandReject                // 拒绝解散
+	MsgKindQuick                        // 申请少人开局
+	MsgKindQuickReject                  // 拒绝少人开局
 	MsgKindDisbandIdle                  // 解散房间
 	MsgKindDisbandForce                 // 强制解散房间
 	MsgKindGame                         // 游戏操作

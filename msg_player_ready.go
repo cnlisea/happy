@@ -26,7 +26,7 @@ func (h *Happy) MsgPlayerReadyHandler(userKey interface{}) {
 			return allReady
 		})
 		if allReady {
-			h.RoundBegin(false)
+			h.RoundBegin(false, false)
 		}
 	}
 }

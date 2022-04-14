@@ -112,6 +112,6 @@ func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 	}
 
 	if !exist && h.roundBeginPolicy == RoundBeginPolicyFullPlayer {
-		h.RoundBegin(false)
+		h.RoundBegin(false, false)
 	}
 }

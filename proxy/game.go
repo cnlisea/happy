@@ -19,9 +19,11 @@ type Game interface {
 	PlayerExit(userKey interface{}, view bool)
 	PlayerOfflineKickOut() time.Duration
 	PlayerAuto(userKey interface{})
-	Begin()
+	Begin(quick bool)
 	End()
 	Auto() *GameAuto
+	Quick(num int) bool
+	QuickTs() time.Duration
 	View() bool
 	DisbandTs() time.Duration
 	IpLimit() bool

@@ -25,6 +25,12 @@ func (h *Happy) MsgHandler(msg *proxy.Msg) {
 	case proxy.MsgKindDisbandReject:
 		// 拒绝解散
 		h.MsgDisbandRejectHandler(msg.UserKey)
+	case proxy.MsgKindQuick:
+		// 申请少人开局
+		h.MsgQuickHandler(msg.UserKey)
+	case proxy.MsgKindQuickReject:
+		// 拒绝少人开局
+		h.MsgQuickRejectHandler(msg.UserKey)
 	case proxy.MsgKindDisbandIdle:
 		// 解散房间
 		if h.curRound > 0 {

@@ -5,6 +5,7 @@ import "container/list"
 type Player struct {
 	offlineTs int64      // 离线时间戳
 	location  *Location  // 地址信息
+	site      uint32     // 位置
 	state     uint32     // 玩家状态
 	score     *list.List // 分数
 

@@ -12,6 +12,7 @@ const (
 	WatchKindAuto                      // 托管
 	WatchKindLocation                  // 定位
 	WatchKindScore                     // 分数
+	WatchKindSite                      // 位置
 	WatchKindExtend                    // 扩展
 )
 

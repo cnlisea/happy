@@ -143,6 +143,11 @@ func (h *Happy) Init() error {
 			h.event.PlayerScore(key, h.pMgr, h.extend)
 		}
 	})
+	h.pMgr.Watch(pmgr.WatchKindSite, func(key interface{}, p *player.Player) {
+		if h.event != nil && h.event.PlayerSite != nil {
+			h.event.PlayerSite(key, h.pMgr, h.extend)
+		}
+	})
 
 	return h.game.Init(h.ctx, h, h.pMgr, h.playerMsg)
 }

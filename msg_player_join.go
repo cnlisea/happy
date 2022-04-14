@@ -1,6 +1,8 @@
 package happy
 
-import "github.com/cnlisea/happy/pmgr/player"
+import (
+	"github.com/cnlisea/happy/pmgr/player"
+)
 
 func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 	if p == nil {
@@ -35,6 +37,7 @@ func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 				return
 			}
 
+			var site = uint32(1)
 			if gameNum > 0 {
 				// IP相同限制
 				if h.game.IpLimit() {
@@ -90,7 +93,20 @@ func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 						return
 					}
 				}
+
+				var siteIndex int
+				h.pMgr.Range(func(key interface{}, p *player.Player) bool {
+					if !p.View() {
+						siteIndex = siteIndex | (1 << (p.Site() - 1))
+					}
+					return true
+				})
+				for siteIndex&1 == 1 {
+					siteIndex = siteIndex >> 1
+					site++
+				}
 			}
+			p.SetSite(site)
 		}
 
 		existPlayer = p

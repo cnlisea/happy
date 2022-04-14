@@ -92,6 +92,12 @@ func (pm *PMgr) Add(key interface{}, p *player.Player) {
 					watch(key, p)
 				}
 			}(key, watch))
+		case WatchKindSite:
+			newPlayer.WatchSite(func(key interface{}, watch Watch) func(p *player.Player) {
+				return func(p *player.Player) {
+					watch(key, p)
+				}
+			}(key, watch))
 		case WatchKindExtend:
 			newPlayer.WatchExtend(func(key interface{}, watch Watch) func(p *player.Player) {
 				return func(p *player.Player) {

@@ -1,5 +1,7 @@
 package proxy
 
+import "github.com/cnlisea/happy/pmgr/player"
+
 type MsgKind int
 
 const (
@@ -15,6 +17,14 @@ const (
 	MsgKindGame                         // 游戏操作
 	MsgKindByUser                       // 自定义
 )
+
+type MsgKindPlayerJoinData struct {
+	Player *player.Player
+}
+
+type MsgKindPlayerReadyData struct {
+	Site uint32
+}
 
 type Msg struct {
 	Kind    MsgKind

@@ -1,7 +1,6 @@
 package happy
 
 import (
-	"github.com/cnlisea/happy/pmgr/player"
 	"github.com/cnlisea/happy/proxy"
 )
 
@@ -12,13 +11,15 @@ func (h *Happy) MsgHandler(msg *proxy.Msg) {
 
 	switch msg.Kind {
 	case proxy.MsgKindPlayerJoin:
-		if p, ok := msg.Data.(*player.Player); ok {
-			h.MsgPlayerJoinHandler(msg.UserKey, p)
+		if data, ok := msg.Data.(*proxy.MsgKindPlayerJoinData); ok && data != nil {
+			h.MsgPlayerJoinHandler(msg.UserKey, data.Player)
 		}
 	case proxy.MsgKindPlayerExit:
 		h.MsgPlayerExitHandler(msg.UserKey)
 	case proxy.MsgKindPlayerReady:
-		h.MsgPlayerReadyHandler(msg.UserKey)
+		if data, ok := msg.Data.(*proxy.MsgKindPlayerReadyData); ok && data != nil {
+			h.MsgPlayerReadyHandler(msg.UserKey, data.Site)
+		}
 	case proxy.MsgKindDisband:
 		// 申请解散
 		h.MsgDisbandHandler(msg.UserKey)

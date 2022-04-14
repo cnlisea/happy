@@ -19,17 +19,19 @@ func New() *Delay {
 	}
 }
 
-func (d *Delay) Add(delayTime time.Duration, f func(ts int64, args interface{}), arg interface{}) {
+func (d *Delay) Add(delayTime time.Duration, f func(ts int64, args interface{}), arg interface{}) int64 {
 	if f == nil {
-		return
+		return 0
 	}
 
-	d.QueueAdd(&Unit{
+	u := &Unit{
 		DelayTime: delayTime,
 		CallTs:    time.Now().Add(delayTime).UnixNano(),
 		F:         f,
 		Arg:       arg,
-	})
+	}
+	d.QueueAdd(u)
+	return u.CallTs
 }
 
 func (d *Delay) Range(f func(ts int64, args interface{}) bool) {

@@ -59,4 +59,8 @@ func (h *Happy) RoundEnd() {
 		}
 	}
 	h.game.End()
+
+	if h.curRound == h.maxRound {
+		h.Finish(false)
+	}
 }

@@ -41,6 +41,7 @@ func (h *Happy) MsgHandler(msg *proxy.Msg) {
 		// 强制解散房间
 		h.Finish(true)
 	case proxy.MsgKindGame:
+		h.MsgGameHandler(msg.UserKey, msg.Data)
 	case proxy.MsgKindByUser:
 	}
 }

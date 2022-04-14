@@ -1,7 +1,8 @@
 package proxy
 
 import (
-	"github.com/cnlisea/happy/pmgr"
+	"context"
+	"github.com/cnlisea/happy/pmgr/player"
 	"time"
 )
 
@@ -12,13 +13,14 @@ type GameAuto struct {
 }
 
 type Game interface {
-	Init(pMgr *pmgr.PMgr, pMsg PlayerMsg) error
+	Init(ctx context.Context, delay GameDelay, pMgr GamePMgr, pMsg PlayerMsg) error
 	PlayerMaxNum() int
 	PlayerJoin(userKey interface{}, view bool)
 	PlayerOp(userKey interface{}, view bool)
 	PlayerExit(userKey interface{}, view bool)
 	PlayerOfflineKickOut() time.Duration
 	PlayerAuto(userKey interface{})
+	Msg(userKey interface{}, data interface{})
 	Begin(quick bool)
 	End()
 	Auto() *GameAuto
@@ -29,4 +31,15 @@ type Game interface {
 	IpLimit() bool
 	DistanceLimit() int
 	Finish(disband bool)
+}
+
+type GameDelay interface {
+	DelayFunc(delayTs time.Duration, f func(args interface{}), args interface{})
+	DelayMsg(delayTs time.Duration, userKey []interface{}, data ...interface{})
+}
+
+type GamePMgr interface {
+	Get(key interface{}) *player.Player
+	Len(filter ...func(*player.Player) bool) int
+	Range(f func(key interface{}, p *player.Player) bool)
 }

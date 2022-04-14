@@ -10,9 +10,7 @@ type Player struct {
 	key interface{} // 标识
 }
 
-type Filter func(*player.Player) bool
-
-func (pm *PMgr) Len(filter ...Filter) int {
+func (pm *PMgr) Len(filter ...func(*player.Player) bool) int {
 	if filter == nil || len(filter) == 0 {
 		return pm.players.Len()
 	}

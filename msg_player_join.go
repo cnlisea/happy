@@ -37,18 +37,17 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 				return
 			}
 
-			var site = uint32(1)
-			if gameNum > 0 {
-				// IP相同限制
-				if h.game.IpLimit() {
-					pLocation := p.Location()
-					if pLocation == nil || pLocation.Ip == "" {
-						if h.event != nil && h.event.PlayerJoinFail != nil {
-							h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationOff, h.extend)
-						}
-						return
+			// IP相同限制
+			if h.game.IpLimit() {
+				pLocation := p.Location()
+				if pLocation == nil || pLocation.Ip == "" {
+					if h.event != nil && h.event.PlayerJoinFail != nil {
+						h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationOff, h.extend)
 					}
+					return
+				}
 
+				if gameNum > 0 {
 					var same bool
 					h.pMgr.Range(func(key interface{}, p *player.Player) bool {
 						if p.View() {
@@ -68,32 +67,58 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 						return
 					}
 				}
+			}
 
-				if distance := h.game.DistanceLimit(); distance > 0 {
-					// 定位
-					pLocation := p.Location()
-					if pLocation == nil || pLocation.Longitude == "" || pLocation.Latitude == "" {
-						if h.event != nil && h.event.PlayerJoinFail != nil {
-							h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationOff, h.extend)
-						}
-						return
+			distanceLimit := h.game.DistanceLimit()
+			// 定位
+			pLocation := p.Location()
+			if distanceLimit > 0 && (pLocation == nil || pLocation.Longitude == "" || pLocation.Latitude == "") {
+				if h.event != nil && h.event.PlayerJoinFail != nil {
+					h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationOff, h.extend)
+				}
+				return
+			}
+
+			if distanceLimit > 0 && (h.plugin == nil || h.plugin.LocationDistance == nil) {
+				if h.event != nil && h.event.PlayerJoinFail != nil {
+					h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationTooClose, h.extend)
+				}
+				return
+			}
+
+			if gameNum > 0 {
+				desLocation := make([]*player.Location, 0, gameNum)
+				h.pMgr.Range(func(key interface{}, p *player.Player) bool {
+					if !p.View() {
+						desLocation = append(desLocation, p.Location())
 					}
+					return true
+				})
 
-					h.pMgr.Range(func(key interface{}, p *player.Player) bool {
-						if !p.View() {
+				distances, _ := h.plugin.LocationDistance(pLocation, desLocation...)
+				var tooClose bool
+				if distanceLimit > 0 {
+					tooClose = len(distances) == 0
+					if !tooClose {
+						for i := range distances {
+							if distances[i] < distanceLimit {
+								tooClose = true
+								break
+							}
 						}
-						return true
-					})
-
-					// TODO 距离相近
-					if 0 > distance {
-						if h.event != nil && h.event.PlayerJoinFail != nil {
-							h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationTooClose, h.extend)
-						}
-						return
 					}
 				}
 
+				if tooClose {
+					if h.event != nil && h.event.PlayerJoinFail != nil {
+						h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationTooClose, h.extend)
+					}
+					return
+				}
+			}
+
+			var site = uint32(1)
+			if gameNum > 0 {
 				var siteIndex int
 				h.pMgr.Range(func(key interface{}, p *player.Player) bool {
 					if !p.View() {
@@ -107,7 +132,6 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 				}
 			}
 			p.SetSite(site)
-
 			// cancel quick vote
 			if h.quickVote != nil {
 				h.quickVote.Cancel()
@@ -132,7 +156,11 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 		h.event.PlayerJoinSuccess(userKey, h.pMgr, exist, h.extend)
 	}
 
-	if !exist && h.roundBeginPolicy == RoundBeginPolicyFullPlayer {
+	if !exist &&
+		h.roundBeginPolicy == RoundBeginPolicyFullPlayer &&
+		h.pMgr.Len(func(p *player.Player) bool {
+			return !p.View()
+		}) == h.game.PlayerMaxNum() {
 		h.RoundBegin(false, false)
 	}
 }

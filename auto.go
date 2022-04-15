@@ -1,6 +1,6 @@
 package happy
 
-func (h *Happy) AutoPlayer(userKey interface{}) {
+func (h *_Happy) AutoPlayer(userKey interface{}) {
 	if h.game.Auto() == nil {
 		return
 	}
@@ -17,7 +17,7 @@ func (h *Happy) AutoPlayer(userKey interface{}) {
 	h.auto.Add(userKey, p.Op())
 }
 
-func (h *Happy) AutoPlayerDel(userKey interface{}) {
+func (h *_Happy) AutoPlayerDel(userKey interface{}) {
 	if h.game.Auto() == nil {
 		return
 	}

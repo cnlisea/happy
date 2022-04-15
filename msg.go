@@ -4,7 +4,13 @@ import (
 	"github.com/cnlisea/happy/proxy"
 )
 
-func (h *Happy) MsgHandler(msg *proxy.Msg) {
+func (h *_Happy) Msg(msg *proxy.Msg) {
+	if msg != nil && h.msgChan != nil {
+		h.msgChan <- msg
+	}
+}
+
+func (h *_Happy) MsgHandler(msg *proxy.Msg) {
 	if msg == nil {
 		return
 	}

@@ -11,11 +11,11 @@ const (
 	RoundBeginPolicyFullPlayer                             // 满员
 )
 
-func (h *Happy) RoundBeginPolicy(policy RoundBeginPolicy) {
+func (h *_Happy) RoundBeginPolicy(policy RoundBeginPolicy) {
 	h.roundBeginPolicy = policy
 }
 
-func (h *Happy) RoundBegin(resume bool, quick bool) {
+func (h *_Happy) RoundBegin(resume bool, quick bool) {
 	if h.begin {
 		return
 	}
@@ -43,7 +43,7 @@ func (h *Happy) RoundBegin(resume bool, quick bool) {
 	h.game.Begin(quick)
 }
 
-func (h *Happy) RoundEnd() {
+func (h *_Happy) RoundEnd() {
 	if !h.begin {
 		return
 	}

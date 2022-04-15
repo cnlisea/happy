@@ -38,3 +38,7 @@ type Event struct {
 	QuickFail         func(deadlineTs int64, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{})
 	Finish            func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{})
 }
+
+func (h *_Happy) Event(e *Event) {
+	h.event = e
+}

@@ -1,5 +1,5 @@
 package happy
 
-func (h *Happy) Owner(userKey interface{}) {
+func (h *_Happy) Owner(userKey interface{}) {
 	h.ownerUserKey = userKey
 }

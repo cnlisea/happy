@@ -2,7 +2,7 @@ package happy
 
 import "github.com/cnlisea/happy/pmgr/player"
 
-func (h *Happy) MsgPlayerExitHandler(userKey interface{}) {
+func (h *_Happy) MsgPlayerExitHandler(userKey interface{}) {
 	if h.curRound > 0 {
 		return
 	}

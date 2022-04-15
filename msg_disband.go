@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (h *Happy) MsgDisbandHandler(userKey interface{}) {
+func (h *_Happy) MsgDisbandHandler(userKey interface{}) {
 	if h.curRound == 0 {
 		return
 	}

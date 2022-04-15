@@ -12,6 +12,6 @@ const (
 	CostModeFinish                          // 最后结束
 )
 
-func (h *Happy) Cost(mode CostMode) {
+func (h *_Happy) Cost(mode CostMode) {
 	h.costMode = mode
 }

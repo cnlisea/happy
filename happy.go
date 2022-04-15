@@ -12,50 +12,58 @@ import (
 	"time"
 )
 
-type Happy struct {
-	ctx       context.Context
-	delay     *delay.Delay
-	heartbeat *heartbeat.Heartbeat
-	pMgr      *pmgr.PMgr
-	extend    map[string]interface{}
-
-	msgChan       chan *proxy.Msg
-	byUserHandler func(userKey interface{}, data interface{}, delay proxy.Delay, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{})
-
-	event  *Event
-	plugin *Plugin
-
-	playerMsg proxy.PlayerMsg
-
-	costMode CostMode
-
-	roundBeginPolicy RoundBeginPolicy
-
-	auto *auto.Auto
-
-	disbandVote *vote.Vote
-	quickVote   *vote.Vote
-
-	ownerUserKey interface{}
-
-	game               proxy.Game
-	begin              bool   // 开始状态
-	curRound, maxRound uint32 // 局数
+type Happy interface {
+	Init() error
+	Run(resume bool)
+	Cost(mode CostMode)
+	Event(e *Event)
+	Heartbeat(interval time.Duration) error
+	Msg(msg *proxy.Msg)
+	MsgByUser(f func(userKey interface{}, data interface{}, delay proxy.Delay, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}))
+	Owner(userKey interface{})
+	PlayerMsg(msg proxy.PlayerMsg)
+	Plugin(p *Plugin)
+	RoundBeginPolicy(policy RoundBeginPolicy)
 }
 
-func New(ctx context.Context, game proxy.Game) *Happy {
+type _Happy struct {
+	ctx                context.Context
+	delay              *delay.Delay
+	heartbeat          *heartbeat.Heartbeat
+	pMgr               *pmgr.PMgr
+	event              *Event
+	plugin             *Plugin
+	costMode           CostMode
+	auto               *auto.Auto
+	disbandVote        *vote.Vote
+	quickVote          *vote.Vote
+	msgChan            chan *proxy.Msg
+	byUserHandler      func(userKey interface{}, data interface{}, delay proxy.Delay, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{})
+	playerMsg          proxy.PlayerMsg
+	roundBeginPolicy   RoundBeginPolicy
+	ownerUserKey       interface{}
+	game               proxy.Game
+	begin              bool
+	curRound, maxRound uint32
+	extend             map[string]interface{}
+}
+
+func New(ctx context.Context, maxRound uint32, game proxy.Game, extend map[string]interface{}) Happy {
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	return &Happy{
-		ctx:   ctx,
-		delay: delay.New(),
-		pMgr:  pmgr.New(),
-		game:  game,
+	return &_Happy{
+		ctx:      ctx,
+		delay:    delay.New(),
+		pMgr:     pmgr.New(),
+		msgChan:  make(chan *proxy.Msg, 100),
+		game:     game,
+		maxRound: maxRound,
+		extend:   extend,
 	}
 }
 
-func (h *Happy) Init() error {
+func (h *_Happy) Init() error {
 	h.auto = auto.New(h.delay, func(op bool) time.Duration {
 		a := h.game.Auto()
 		if a == nil {
@@ -153,7 +161,7 @@ func (h *Happy) Init() error {
 	return h.game.Init(h.ctx, h, h.pMgr, h.playerMsg)
 }
 
-func (h *Happy) Run(resume bool) {
+func (h *_Happy) Run(resume bool) {
 	defer func() {
 		err := recover()
 		switch err {
@@ -183,7 +191,7 @@ func (h *Happy) Run(resume bool) {
 	h.Loop(0)
 }
 
-func (h *Happy) Loop(timeout time.Duration) {
+func (h *_Happy) Loop(timeout time.Duration) {
 	var (
 		timeoutTimer = time.NewTimer(timeout)
 		msg          *proxy.Msg

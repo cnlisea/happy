@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (h *Happy) Heartbeat(interval time.Duration) error {
+func (h *_Happy) Heartbeat(interval time.Duration) error {
 	if interval <= 0 {
 		return errors.New("interval invalid")
 	}

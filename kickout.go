@@ -4,7 +4,7 @@ type _DelayPlayerKickOut struct {
 	UserKey interface{}
 }
 
-func (h *Happy) PlayerKickOut(userKey interface{}) {
+func (h *_Happy) PlayerKickOut(userKey interface{}) {
 	if h.curRound > 0 {
 		return
 	}
@@ -33,7 +33,7 @@ func (h *Happy) PlayerKickOut(userKey interface{}) {
 	}
 }
 
-func (h *Happy) PlayerKickOutDel(userKey interface{}) {
+func (h *_Happy) PlayerKickOutDel(userKey interface{}) {
 	var (
 		delay *_DelayPlayerKickOut
 		ok    bool
@@ -44,7 +44,7 @@ func (h *Happy) PlayerKickOutDel(userKey interface{}) {
 	})
 }
 
-func (h *Happy) PlayerKickOutClean() {
+func (h *_Happy) PlayerKickOutClean() {
 	ts := h.game.PlayerOfflineKickOut()
 	if ts <= 0 {
 		return

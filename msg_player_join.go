@@ -4,7 +4,7 @@ import (
 	"github.com/cnlisea/happy/pmgr/player"
 )
 
-func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
+func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 	if p == nil {
 		return
 	}

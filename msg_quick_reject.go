@@ -1,6 +1,6 @@
 package happy
 
-func (h *Happy) MsgQuickRejectHandler(userKey interface{}) {
+func (h *_Happy) MsgQuickRejectHandler(userKey interface{}) {
 	if h.curRound == 0 {
 		return
 	}

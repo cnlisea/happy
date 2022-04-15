@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-func (h *Happy) DelayFunc(delayTs time.Duration, f func(args interface{}), args interface{}) {
+func (h *_Happy) DelayFunc(delayTs time.Duration, f func(args interface{}), args interface{}) {
 	h.delay.Add(delayTs, func(ts int64, args interface{}) {
 		f(args)
 	}, args)
@@ -15,7 +15,7 @@ type _DelayMsg struct {
 	Data    []interface{}
 }
 
-func (h *Happy) DelayMsg(delayTs time.Duration, userKey []interface{}, data ...interface{}) {
+func (h *_Happy) DelayMsg(delayTs time.Duration, userKey []interface{}, data ...interface{}) {
 	if h.playerMsg == nil || userKey == nil || data == nil || len(userKey) == 0 || len(data) == 0 {
 		return
 	}
@@ -34,7 +34,7 @@ func (h *Happy) DelayMsg(delayTs time.Duration, userKey []interface{}, data ...i
 	})
 }
 
-func (h *Happy) DelayMsgClean(userKey interface{}) {
+func (h *_Happy) DelayMsgClean(userKey interface{}) {
 	if userKey == nil {
 		return
 	}

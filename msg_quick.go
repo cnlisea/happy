@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (h *Happy) MsgQuickHandler(userKey interface{}) {
+func (h *_Happy) MsgQuickHandler(userKey interface{}) {
 	if h.quickVote == nil || h.quickVote.End() {
 		if h.curRound > 0 {
 			return

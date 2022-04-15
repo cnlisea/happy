@@ -2,7 +2,7 @@ package happy
 
 import "github.com/cnlisea/happy/pmgr/player"
 
-func (h *Happy) MsgPlayerReadyHandler(userKey interface{}, site uint32) {
+func (h *_Happy) MsgPlayerReadyHandler(userKey interface{}, site uint32) {
 	if h.begin {
 		return
 	}

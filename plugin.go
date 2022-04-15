@@ -7,3 +7,7 @@ type Plugin struct {
 	QuickMinAgreeNum    func(num int) int
 	QuickDeadlinePass   func(extend map[string]interface{}) bool
 }
+
+func (h *_Happy) Plugin(p *Plugin) {
+	h.plugin = p
+}

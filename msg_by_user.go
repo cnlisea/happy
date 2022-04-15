@@ -5,11 +5,11 @@ import (
 	"github.com/cnlisea/happy/proxy"
 )
 
-func (h *Happy) MsgByUser(f func(userKey interface{}, data interface{}, delay proxy.Delay, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{})) {
+func (h *_Happy) MsgByUser(f func(userKey interface{}, data interface{}, delay proxy.Delay, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{})) {
 	h.byUserHandler = f
 }
 
-func (h *Happy) MsgByUserHandler(userKey interface{}, data interface{}) {
+func (h *_Happy) MsgByUserHandler(userKey interface{}, data interface{}) {
 	if h.byUserHandler == nil {
 		return
 	}

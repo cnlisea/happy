@@ -1,6 +1,6 @@
 package happy
 
-func (h *Happy) MsgDisbandRejectHandler(userKey interface{}) {
+func (h *_Happy) MsgDisbandRejectHandler(userKey interface{}) {
 	if h.curRound == 0 {
 		return
 	}

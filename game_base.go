@@ -65,7 +65,7 @@ func (g *GameBase) View() bool {
 }
 
 func (g *GameBase) DisbandTs() time.Duration {
-	return 0
+	return 2 * time.Minute
 }
 
 func (g *GameBase) IpLimit() bool {

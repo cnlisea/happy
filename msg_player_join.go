@@ -107,6 +107,11 @@ func (h *Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 				}
 			}
 			p.SetSite(site)
+
+			// cancel quick vote
+			if h.quickVote != nil {
+				h.quickVote.Cancel()
+			}
 		}
 
 		existPlayer = p

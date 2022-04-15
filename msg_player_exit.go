@@ -30,4 +30,9 @@ func (h *Happy) MsgPlayerExitHandler(userKey interface{}) {
 		h.event.PlayerExit(userKey, h.pMgr, h.extend)
 	}
 	h.pMgr.Del(userKey)
+
+	// cancel quick vote
+	if h.quickVote != nil {
+		h.quickVote.Cancel()
+	}
 }

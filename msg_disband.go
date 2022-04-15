@@ -35,16 +35,7 @@ func (h *_Happy) MsgDisbandHandler(userKey interface{}) {
 		h.disbandVote.Deadline(h.delay, h.game.DisbandTs(), pass, true)
 		h.disbandVote.CallbackPass(func(ts int64) {
 			if h.event != nil && h.event.DisbandPass != nil {
-				gameNum := h.pMgr.Len(func(p *player.Player) bool {
-					return !p.View()
-				})
-				var op = make(map[interface{}]bool, gameNum)
-				h.pMgr.Range(func(key interface{}, p *player.Player) bool {
-					if !p.View() {
-						op[key] = false
-					}
-					return true
-				})
+				var op = make(map[interface{}]bool, h.disbandVote.Num())
 				h.disbandVote.Range(func(key interface{}, o bool) bool {
 					op[key] = o
 					return true
@@ -55,16 +46,7 @@ func (h *_Happy) MsgDisbandHandler(userKey interface{}) {
 		})
 		h.disbandVote.CallbackFail(func(ts int64) {
 			if h.event != nil && h.event.DisbandFail != nil {
-				gameNum := h.pMgr.Len(func(p *player.Player) bool {
-					return !p.View()
-				})
-				var op = make(map[interface{}]bool, gameNum)
-				h.pMgr.Range(func(key interface{}, p *player.Player) bool {
-					if !p.View() {
-						op[key] = false
-					}
-					return true
-				})
+				var op = make(map[interface{}]bool, h.disbandVote.Num())
 				h.disbandVote.Range(func(key interface{}, o bool) bool {
 					op[key] = o
 					return true
@@ -76,16 +58,7 @@ func (h *_Happy) MsgDisbandHandler(userKey interface{}) {
 			if h.event == nil || (agree && h.event.DisbandAgree == nil) || (!agree && h.event.DisbandReject == nil) {
 				return
 			}
-			gameNum := h.pMgr.Len(func(p *player.Player) bool {
-				return !p.View()
-			})
-			var op = make(map[interface{}]bool, gameNum)
-			h.pMgr.Range(func(key interface{}, p *player.Player) bool {
-				if !p.View() {
-					op[key] = false
-				}
-				return true
-			})
+			var op = make(map[interface{}]bool, h.disbandVote.Num())
 			h.disbandVote.Range(func(key interface{}, o bool) bool {
 				op[key] = o
 				return true

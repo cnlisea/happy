@@ -30,7 +30,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 			})
 
 			// 人数已满
-			if maxNum := h.game.PlayerMaxNum(); maxNum > 0 && gameNum >= h.game.PlayerMaxNum() {
+			if maxNum := h.game.PlayerMaxNum(); maxNum > 0 && gameNum >= maxNum {
 				if h.event != nil && h.event.PlayerJoinFail != nil {
 					h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindFull, h.extend)
 				}
@@ -95,7 +95,10 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 					return true
 				})
 
-				distances, _ := h.plugin.LocationDistance(pLocation, desLocation...)
+				var distances []int
+				if h.plugin != nil && h.plugin.LocationDistance != nil {
+					distances, _ = h.plugin.LocationDistance(pLocation, desLocation...)
+				}
 				var tooClose bool
 				if distanceLimit > 0 {
 					tooClose = len(distances) == 0

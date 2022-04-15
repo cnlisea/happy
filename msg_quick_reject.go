@@ -1,7 +1,7 @@
 package happy
 
 func (h *_Happy) MsgQuickRejectHandler(userKey interface{}) {
-	if h.curRound == 0 {
+	if h.curRound > 0 {
 		return
 	}
 

@@ -7,6 +7,10 @@ import (
 )
 
 func (h *_Happy) MsgQuickHandler(userKey interface{}) {
+	if h.curRound > 0 {
+		return
+	}
+
 	if h.quickVote == nil || h.quickVote.End() {
 		if h.curRound > 0 {
 			return
@@ -48,16 +52,7 @@ func (h *_Happy) MsgQuickHandler(userKey interface{}) {
 		h.quickVote.Deadline(h.delay, h.game.QuickTs(), pass, true)
 		h.quickVote.CallbackPass(func(ts int64) {
 			if h.event != nil && h.event.QuickPass != nil {
-				gameNum := h.pMgr.Len(func(p *player.Player) bool {
-					return !p.View()
-				})
-				var op = make(map[interface{}]bool, gameNum)
-				h.pMgr.Range(func(key interface{}, p *player.Player) bool {
-					if !p.View() {
-						op[key] = false
-					}
-					return true
-				})
+				var op = make(map[interface{}]bool, h.quickVote.Num())
 				h.quickVote.Range(func(key interface{}, o bool) bool {
 					op[key] = o
 					return true
@@ -68,16 +63,7 @@ func (h *_Happy) MsgQuickHandler(userKey interface{}) {
 		})
 		h.quickVote.CallbackFail(func(ts int64) {
 			if h.event != nil && h.event.QuickFail != nil {
-				gameNum := h.pMgr.Len(func(p *player.Player) bool {
-					return !p.View()
-				})
-				var op = make(map[interface{}]bool, gameNum)
-				h.pMgr.Range(func(key interface{}, p *player.Player) bool {
-					if !p.View() {
-						op[key] = false
-					}
-					return true
-				})
+				var op = make(map[interface{}]bool, h.quickVote.Num())
 				h.quickVote.Range(func(key interface{}, o bool) bool {
 					op[key] = o
 					return true
@@ -89,16 +75,7 @@ func (h *_Happy) MsgQuickHandler(userKey interface{}) {
 			if h.event == nil || (agree && h.event.QuickAgree == nil) || (!agree && h.event.QuickReject == nil) {
 				return
 			}
-			gameNum := h.pMgr.Len(func(p *player.Player) bool {
-				return !p.View()
-			})
-			var op = make(map[interface{}]bool, gameNum)
-			h.pMgr.Range(func(key interface{}, p *player.Player) bool {
-				if !p.View() {
-					op[key] = false
-				}
-				return true
-			})
+			var op = make(map[interface{}]bool, h.quickVote.Num())
 			h.quickVote.Range(func(key interface{}, o bool) bool {
 				op[key] = o
 				return true

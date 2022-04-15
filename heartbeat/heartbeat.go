@@ -10,6 +10,7 @@ type Heartbeat struct {
 	delayProxy proxy.Delay
 
 	interval     time.Duration
+	checkTs      int64
 	lastActiveTs int64
 	fn           []func()
 }
@@ -25,14 +26,14 @@ func New(delay proxy.Delay, interval time.Duration, fn ...func()) *Heartbeat {
 	}
 
 	h.Active(0)
-	h.delayProxy.Add(h.interval, h.Handler, nil)
+	h.DelayAdd(h.interval)
 
 	return h
 }
 
 func (h *Heartbeat) Handler(ts int64, args interface{}) {
 	if ts-h.lastActiveTs < int64(h.interval) {
-		h.delayProxy.Add(h.interval, h.Handler, nil)
+		h.DelayAdd(time.Duration(h.lastActiveTs) + h.interval - time.Duration(ts))
 		return
 	}
 

@@ -43,20 +43,18 @@ func (h *_Happy) MsgPlayerReadyHandler(userKey interface{}, site uint32) {
 
 	p.SetReady(!p.Ready())
 
-	if h.roundBeginPolicy == RoundBeginPolicyAllPlayerReady {
-		if maxNum := h.game.PlayerMaxNum(); maxNum <= 0 || h.pMgr.Len(func(p *player.Player) bool {
-			return !p.View()
-		}) == maxNum {
-			var allReady = true
-			h.pMgr.Range(func(key interface{}, p *player.Player) bool {
-				if !p.View() && !p.Ready() {
-					allReady = false
-				}
-				return allReady
-			})
-			if allReady {
-				h.RoundBegin(false, false)
+	if maxNum := h.game.PlayerMaxNum(); maxNum <= 0 || h.pMgr.Len(func(p *player.Player) bool {
+		return !p.View()
+	}) == maxNum {
+		var allReady = true
+		h.pMgr.Range(func(key interface{}, p *player.Player) bool {
+			if !p.View() && !p.Ready() {
+				allReady = false
 			}
+			return allReady
+		})
+		if allReady {
+			h.RoundBegin(false, false)
 		}
 	}
 }

@@ -1,6 +1,8 @@
 package happy
 
 import (
+	"runtime"
+
 	"github.com/cnlisea/happy/proxy"
 )
 
@@ -15,6 +17,25 @@ func (h *_Happy) MsgHandler(msg *proxy.Msg) {
 		return
 	}
 
+	defer func() {
+		err := recover()
+		switch err {
+		case nil:
+		case PanicGameEnd:
+			h.RoundEnd()
+		case PanicDoneExit:
+			panic(err)
+		default:
+			var buf = make([]byte, 4096)
+			n := runtime.Stack(buf, false)
+			buf = buf[:n]
+			// TODO log
+		}
+	}()
+
+	if h.heartbeat != nil {
+		h.heartbeat.Active(0)
+	}
 	switch msg.Kind {
 	case proxy.MsgKindPlayerJoin:
 		if data, ok := msg.Data.(*proxy.MsgKindPlayerJoinData); ok && data != nil {

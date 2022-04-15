@@ -866,3 +866,164 @@ func Test_Happy_EventCost_Finish(t *testing.T) {
 	t.Log("run", time.Now().Unix())
 	h.Run(false)
 }
+
+type EventDisbandGame struct {
+	GameBase
+}
+
+func (g *EventDisbandGame) PlayerMaxNum() int {
+	return 2
+}
+
+func (g *EventDisbandGame) DisbandTs() time.Duration {
+	return 2 * time.Second
+}
+
+func Test_Happy_EventDisband(t *testing.T) {
+	h := New(nil, 1, new(EventDisbandGame), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		PlayerJoinSuccess: func(key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
+			t.Log("player join success", key, pMgr.Len())
+		},
+		PlayerJoinFail: func(key interface{}, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
+			t.Log("player join fail", key, kind)
+		},
+		RoundBegin: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("round begin", curRound, maxRound)
+		},
+		RoundEnd: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("round end", curRound, maxRound)
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+		DisbandAgree: func(ts time.Duration, deadlineTs int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+			t.Log("disband agree", ts, deadlineTs, userKey, pMgr.Len(), op)
+		},
+		DisbandReject: func(ts time.Duration, deadlineTs int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+			t.Log("disband reject", ts, deadlineTs, userKey, pMgr.Len(), op)
+		},
+		DisbandPass: func(deadlineTs int64, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+			t.Log("disband pass", deadlineTs, pMgr.Len(), op)
+		},
+		DisbandFail: func(deadlineTs int64, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+			t.Log("disband fail", deadlineTs, pMgr.Len(), op)
+		},
+	})
+	h.RoundBeginPolicy(RoundBeginPolicyFullPlayer)
+	h.Init()
+
+	go func() {
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: player.New(),
+			},
+		})
+
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 2,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: player.New(),
+			},
+		})
+
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindDisband,
+			UserKey: 1,
+		})
+
+		time.Sleep(time.Second)
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindDisbandReject,
+			UserKey: 2,
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+type EventQuickGame struct {
+	GameBase
+}
+
+func (g *EventQuickGame) PlayerMaxNum() int {
+	return 3
+}
+
+func (g *EventQuickGame) Quick(num int) bool {
+	return true
+}
+
+func (g *EventQuickGame) QuickTs() time.Duration {
+	return 1 * time.Second
+}
+
+func Test_Happy_EventQuick(t *testing.T) {
+	h := New(nil, 1, new(EventQuickGame), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		PlayerJoinSuccess: func(key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
+			t.Log("player join success", key, pMgr.Len())
+		},
+		PlayerJoinFail: func(key interface{}, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
+			t.Log("player join fail", key, kind)
+		},
+		RoundBegin: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("round begin", curRound, maxRound)
+		},
+		RoundEnd: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("round end", curRound, maxRound)
+		},
+		QuickAgree: func(ts time.Duration, deadlineTs int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+			t.Log("quick agree", ts, deadlineTs, userKey, pMgr.Len(), op)
+		},
+		QuickReject: func(ts time.Duration, deadlineTs int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+			t.Log("quick reject", ts, deadlineTs, userKey, pMgr.Len(), op)
+		},
+		QuickPass: func(deadlineTs int64, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+			t.Log("quick pass", deadlineTs, pMgr.Len(), op)
+		},
+		QuickFail: func(deadlineTs int64, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+			t.Log("quick fail", deadlineTs, pMgr.Len(), op)
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Init()
+
+	go func() {
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: player.New(),
+			},
+		})
+
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 2,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: player.New(),
+			},
+		})
+
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindQuick,
+			UserKey: 1,
+		})
+
+		time.Sleep(500 * time.Millisecond)
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindQuickReject,
+			UserKey: 2,
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}

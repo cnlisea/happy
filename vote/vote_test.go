@@ -1,17 +1,18 @@
 package vote
 
 import (
-	"github.com/cnlisea/happy/delay"
 	"testing"
 	"time"
+
+	"github.com/cnlisea/happy/delay"
 )
 
 func TestVote_FullAgree(t *testing.T) {
 	v := New(2, 2)
-	v.CallbackPass(func() {
+	v.CallbackPass(func(ts int64) {
 		t.Log("vote pass")
 	})
-	v.CallbackFail(func() {
+	v.CallbackFail(func(ts int64) {
 		t.Log("vote fail")
 	})
 
@@ -23,10 +24,10 @@ func TestVote_FullAgree(t *testing.T) {
 
 func TestVote_OneFail(t *testing.T) {
 	v := New(2, 2)
-	v.CallbackPass(func() {
+	v.CallbackPass(func(ts int64) {
 		t.Log("vote pass")
 	})
-	v.CallbackFail(func() {
+	v.CallbackFail(func(ts int64) {
 		t.Log("vote fail")
 	})
 
@@ -36,10 +37,10 @@ func TestVote_OneFail(t *testing.T) {
 
 func TestVote_ManyAgree(t *testing.T) {
 	v := New(2, 3)
-	v.CallbackPass(func() {
+	v.CallbackPass(func(ts int64) {
 		t.Log("vote pass")
 	})
-	v.CallbackFail(func() {
+	v.CallbackFail(func(ts int64) {
 		t.Log("vote fail")
 	})
 
@@ -53,10 +54,10 @@ func TestVote_ManyAgree(t *testing.T) {
 
 func TestVote_FullEnd(t *testing.T) {
 	v := New(2, 3)
-	v.CallbackPass(func() {
+	v.CallbackPass(func(ts int64) {
 		t.Log("vote pass")
 	})
-	v.CallbackFail(func() {
+	v.CallbackFail(func(ts int64) {
 		t.Log("vote fail")
 	})
 	v.FullEnd()
@@ -71,10 +72,10 @@ func TestVote_FullEnd(t *testing.T) {
 
 func TestVote_Deadline(t *testing.T) {
 	v := New(2, 3)
-	v.CallbackPass(func() {
+	v.CallbackPass(func(ts int64) {
 		t.Log("vote pass")
 	})
-	v.CallbackFail(func() {
+	v.CallbackFail(func(ts int64) {
 		t.Log("vote fail")
 	})
 	delayInstance := delay.New()
@@ -96,10 +97,10 @@ func TestVote_Deadline(t *testing.T) {
 
 func TestVote_DeadlinePass(t *testing.T) {
 	v := New(2, 3)
-	v.CallbackPass(func() {
+	v.CallbackPass(func(ts int64) {
 		t.Log("vote pass")
 	})
-	v.CallbackFail(func() {
+	v.CallbackFail(func(ts int64) {
 		t.Log("vote fail")
 	})
 	delayInstance := delay.New()
@@ -121,10 +122,10 @@ func TestVote_DeadlinePass(t *testing.T) {
 
 func TestVote_DeadlineFirst(t *testing.T) {
 	v := New(2, 3)
-	v.CallbackPass(func() {
+	v.CallbackPass(func(ts int64) {
 		t.Log("vote pass")
 	})
-	v.CallbackFail(func() {
+	v.CallbackFail(func(ts int64) {
 		t.Log("vote fail")
 	})
 	delayInstance := delay.New()

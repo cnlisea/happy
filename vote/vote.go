@@ -1,8 +1,9 @@
 package vote
 
 import (
-	"github.com/cnlisea/happy/proxy"
 	"time"
+
+	"github.com/cnlisea/happy/proxy"
 )
 
 type Vote struct {
@@ -11,9 +12,10 @@ type Vote struct {
 	full    bool
 	fullEnd bool
 
-	passFn []func(ts int64)
-	failFn []func(ts int64)
-	addFn  []func(ts time.Duration, deadlineTs int64, key interface{}, agree bool)
+	passFn   []func(ts int64)
+	failFn   []func(ts int64)
+	cancelFn []func(ts int64)
+	addFn    []func(ts time.Duration, deadlineTs int64, key interface{}, agree bool)
 
 	delay         proxy.Delay
 	deadline      bool
@@ -35,6 +37,18 @@ func (v *Vote) End() bool {
 	return v.full
 }
 
+func (v *Vote) Cancel() {
+	if v.full {
+		return
+	}
+
+	v.full = true
+	ts := time.Now().UnixNano()
+	for i := range v.cancelFn {
+		v.cancelFn[i](ts)
+	}
+}
+
 func (v *Vote) FullEnd() {
 	v.fullEnd = true
 }
@@ -45,6 +59,10 @@ func (v *Vote) CallbackPass(f ...func(ts int64)) {
 
 func (v *Vote) CallbackFail(f ...func(ts int64)) {
 	v.failFn = f
+}
+
+func (v *Vote) CallbackCancel(f ...func(ts int64)) {
+	v.cancelFn = f
 }
 
 func (v *Vote) CallbackAdd(f ...func(ts time.Duration, deadlineTs int64, key interface{}, agree bool)) {

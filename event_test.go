@@ -368,3 +368,501 @@ func Test_Happy_EventPlayerJoinFail_LocationTooClose(t *testing.T) {
 	t.Log("run", time.Now().Unix())
 	h.Run(false)
 }
+
+func Test_Happy_EventPlayerExit(t *testing.T) {
+	h := New(nil, 1, new(GameBase), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		PlayerExit: func(key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("player exit", key, pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Init()
+
+	go func() {
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: player.New(),
+			},
+		})
+
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerExit,
+			UserKey: 1,
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+func Test_Happy_EventPlayerReady(t *testing.T) {
+	h := New(nil, 1, new(GameBase), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		PlayerReady: func(key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("player ready", key, pMgr.Get(key).Ready(), pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Init()
+
+	go func() {
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: player.New(),
+			},
+		})
+
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerReady,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerReadyData{
+				Site: 1,
+			},
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+func Test_Happy_EventPlayerLine(t *testing.T) {
+	h := New(nil, 1, new(GameBase), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		PlayerLine: func(key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("player line", key, pMgr.Get(key).OfflineTs(), pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+
+		time.Sleep(1 * time.Second)
+		p.Offline(0)
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+func Test_Happy_EventPlayerOp(t *testing.T) {
+	h := New(nil, 1, new(GameBase), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		PlayerOp: func(key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("player op", key, pMgr.Get(key).Op(), pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+
+		time.Sleep(1 * time.Second)
+		p.SetOp(true)
+		time.Sleep(1 * time.Second)
+		p.SetOp(false)
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+func Test_Happy_EventPlayerAuto(t *testing.T) {
+	h := New(nil, 1, new(GameBase), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		PlayerAuto: func(key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("player auto", key, pMgr.Get(key).Auto(), pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+
+		time.Sleep(1 * time.Second)
+		p.SetAuto(true)
+		time.Sleep(1 * time.Second)
+		p.SetAuto(false)
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+type EventPlayerSite struct {
+	GameBase
+}
+
+func (g *EventPlayerSite) PlayerMaxNum() int {
+	return 2
+}
+
+func Test_Happy_EventPlayerSite(t *testing.T) {
+	h := New(nil, 1, new(EventPlayerSite), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		PlayerSite: func(key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("player site", key, pMgr.Get(key).Site(), pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerReady,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerReadyData{
+				Site: 2,
+			},
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+func Test_Happy_EventPlayerScore(t *testing.T) {
+	h := New(nil, 1, new(GameBase), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		PlayerScore: func(key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("player score", key, pMgr.Get(key).Score(0), pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+		time.Sleep(time.Second)
+		p.AddScore(10)
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+type EventCostGame struct {
+	GameBase
+}
+
+func (g *EventCostGame) PlayerMaxNum() int {
+	return 1
+}
+
+func Test_Happy_EventCost_Join(t *testing.T) {
+	h := New(nil, 1, new(EventCostGame), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		Cost: func(mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("cost", mode, back, pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Cost(CostModeJoin)
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+func Test_Happy_EventCost_FirstRoundBegin(t *testing.T) {
+	h := New(nil, 1, new(EventCostGame), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		Cost: func(mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("cost", mode, back, pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Cost(CostModeFirstRoundBegin)
+	h.RoundBeginPolicy(RoundBeginPolicyFullPlayer)
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+type EventCostFirstRoundEndGame struct {
+	GameBase
+}
+
+func (g *EventCostFirstRoundEndGame) PlayerMaxNum() int {
+	return 1
+}
+
+func (g *EventCostFirstRoundEndGame) Begin(quick bool) {
+	g.GameEnd()
+}
+
+func Test_Happy_EventCost_FirstRoundEnd(t *testing.T) {
+	h := New(nil, 1, new(EventCostFirstRoundEndGame), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		Cost: func(mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("cost", mode, back, pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Cost(CostModeFirstRoundEnd)
+	h.RoundBeginPolicy(RoundBeginPolicyFullPlayer)
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+type EventCostRoundBeginGame struct {
+	GameBase
+}
+
+func (g *EventCostRoundBeginGame) PlayerMaxNum() int {
+	return 1
+}
+
+func (g *EventCostRoundBeginGame) Begin(quick bool) {
+	g.GameEnd()
+}
+
+func Test_Happy_EventCost_RoundBegin(t *testing.T) {
+	h := New(nil, 2, new(EventCostRoundBeginGame), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		RoundBegin: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("round begin", curRound, maxRound)
+		},
+		RoundEnd: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("round end", curRound, maxRound)
+			h.Msg(&proxy.Msg{
+				Kind:    proxy.MsgKindPlayerReady,
+				UserKey: 1,
+				Data: &proxy.MsgKindPlayerReadyData{
+					Site: 1,
+				},
+			})
+		},
+		Cost: func(mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("cost", mode, back, pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Cost(CostModeRoundBegin)
+	h.RoundBeginPolicy(RoundBeginPolicyFullPlayer)
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+type EventCostRoundEndGame struct {
+	GameBase
+}
+
+func (g *EventCostRoundEndGame) PlayerMaxNum() int {
+	return 1
+}
+
+func (g *EventCostRoundEndGame) Begin(quick bool) {
+	g.GameEnd()
+}
+
+func Test_Happy_EventCost_RoundEnd(t *testing.T) {
+	h := New(nil, 2, new(EventCostRoundEndGame), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		RoundBegin: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("round begin", curRound, maxRound)
+		},
+		RoundEnd: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("round end", curRound, maxRound)
+			h.Msg(&proxy.Msg{
+				Kind:    proxy.MsgKindPlayerReady,
+				UserKey: 1,
+				Data: &proxy.MsgKindPlayerReadyData{
+					Site: 1,
+				},
+			})
+		},
+		Cost: func(mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("cost", mode, back, pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Cost(CostModeRoundEnd)
+	h.RoundBeginPolicy(RoundBeginPolicyFullPlayer)
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}
+
+type EventCostFinishGame struct {
+	GameBase
+}
+
+func (g *EventCostFinishGame) PlayerMaxNum() int {
+	return 1
+}
+
+func (g *EventCostFinishGame) Begin(quick bool) {
+	g.GameEnd()
+}
+
+func Test_Happy_EventCost_Finish(t *testing.T) {
+	h := New(nil, 2, new(EventCostFinishGame), nil)
+	h.Heartbeat(3 * time.Second)
+	h.Event(&Event{
+		RoundBegin: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("round begin", curRound, maxRound)
+		},
+		RoundEnd: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("round end", curRound, maxRound)
+			h.Msg(&proxy.Msg{
+				Kind:    proxy.MsgKindPlayerReady,
+				UserKey: 1,
+				Data: &proxy.MsgKindPlayerReadyData{
+					Site: 1,
+				},
+			})
+		},
+		Cost: func(mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("cost", mode, back, pMgr.Len())
+		},
+		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+			t.Log("finish", time.Now().Unix())
+		},
+	})
+	h.Cost(CostModeFinish)
+	h.RoundBeginPolicy(RoundBeginPolicyFullPlayer)
+	h.Init()
+
+	go func() {
+		p := player.New()
+		h.Msg(&proxy.Msg{
+			Kind:    proxy.MsgKindPlayerJoin,
+			UserKey: 1,
+			Data: &proxy.MsgKindPlayerJoinData{
+				Player: p,
+			},
+		})
+	}()
+	t.Log("run", time.Now().Unix())
+	h.Run(false)
+}

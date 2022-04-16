@@ -1,8 +1,10 @@
 package happy
 
 import (
+	"fmt"
 	"runtime"
 
+	"github.com/cnlisea/happy/log"
 	"github.com/cnlisea/happy/proxy"
 )
 
@@ -29,7 +31,9 @@ func (h *_Happy) MsgHandler(msg *proxy.Msg) {
 			var buf = make([]byte, 4096)
 			n := runtime.Stack(buf, false)
 			buf = buf[:n]
-			// TODO log
+			h.log.Err("msg handler fail",
+				log.String("err", fmt.Sprintln(err)),
+				log.ByteString("stack", buf))
 		}
 	}()
 

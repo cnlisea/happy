@@ -21,13 +21,8 @@ func (h *_Happy) DelayMsg(delayTs time.Duration, userKey []interface{}, data ...
 	}
 
 	h.delay.Add(delayTs, func(ts int64, args interface{}) {
-		var (
-			delayMsg = args.(*_DelayMsg)
-			err      error
-		)
-		if err = h.playerMsg.Send(h.ctx, delayMsg.UserKey, delayMsg.Data...); err != nil {
-			// TODO log
-		}
+		delayMsg := args.(*_DelayMsg)
+		h.playerMsg.Send(h.ctx, delayMsg.UserKey, delayMsg.Data...)
 	}, &_DelayMsg{
 		UserKey: userKey,
 		Data:    data,

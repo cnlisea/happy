@@ -2,14 +2,18 @@ package happy
 
 import (
 	"context"
+	"fmt"
+	"runtime"
+	"time"
+
 	"github.com/cnlisea/happy/auto"
 	"github.com/cnlisea/happy/delay"
 	"github.com/cnlisea/happy/heartbeat"
+	"github.com/cnlisea/happy/log"
 	"github.com/cnlisea/happy/pmgr"
 	"github.com/cnlisea/happy/pmgr/player"
 	"github.com/cnlisea/happy/proxy"
 	"github.com/cnlisea/happy/vote"
-	"time"
 )
 
 type Happy interface {
@@ -24,6 +28,7 @@ type Happy interface {
 	PlayerMsg(msg proxy.PlayerMsg)
 	Plugin(p *Plugin)
 	RoundBeginPolicy(policy RoundBeginPolicy)
+	Log(path string, level log.Level) error
 }
 
 type _Happy struct {
@@ -46,6 +51,7 @@ type _Happy struct {
 	begin              bool
 	curRound, maxRound uint32
 	extend             map[string]interface{}
+	log                *log.Logger
 }
 
 func New(ctx context.Context, maxRound uint32, game proxy.Game, extend map[string]interface{}) Happy {
@@ -158,6 +164,11 @@ func (h *_Happy) Init() error {
 		}
 	})
 
+	if h.log == nil {
+		if err := h.Log("", log.LevelDebug); err != nil {
+			return err
+		}
+	}
 	return h.game.Init(h.ctx, h, h.pMgr, h.playerMsg)
 }
 
@@ -167,8 +178,15 @@ func (h *_Happy) Run(resume bool) {
 		switch err {
 		case nil:
 		case PanicDoneExit:
-			// TODO log
+			h.log.Info("done exit")
 		default:
+			var buf = make([]byte, 4096)
+			n := runtime.Stack(buf, false)
+			buf = buf[:n]
+			h.log.Err("run fail",
+				log.Bool("resume", resume),
+				log.String("err", fmt.Sprintln(err)),
+				log.ByteString("stack", buf))
 		}
 	}()
 

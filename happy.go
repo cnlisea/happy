@@ -18,6 +18,7 @@ import (
 
 type Happy interface {
 	Init() error
+	Resume(begin bool, curRound uint32)
 	Run(resume bool)
 	Cost(mode CostMode)
 	Event(e *Event)
@@ -67,6 +68,11 @@ func New(ctx context.Context, maxRound uint32, game proxy.Game, extend map[strin
 		maxRound: maxRound,
 		extend:   extend,
 	}
+}
+
+func (h *_Happy) Resume(begin bool, curRound uint32) {
+	h.begin = begin
+	h.curRound = curRound
 }
 
 func (h *_Happy) Init() error {

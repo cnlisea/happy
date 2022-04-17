@@ -212,17 +212,11 @@ func (h *_Happy) Run(resume bool) {
 			h.RoundBegin(true, false)
 		}
 	}
-	h.Loop(0)
+	h.Loop()
 }
 
-func (h *_Happy) Loop(timeout time.Duration) {
-	var (
-		timeoutTimer = time.NewTimer(timeout)
-		msg          *proxy.Msg
-	)
-	if timeout <= 0 {
-		timeoutTimer.Stop()
-	}
+func (h *_Happy) Loop() {
+	var msg *proxy.Msg
 Loop:
 	for {
 		if h.msgChan == nil {
@@ -235,10 +229,6 @@ Loop:
 				continue
 			}
 			h.MsgHandler(msg)
-		case <-timeoutTimer.C:
-			if timeout > 0 {
-				break Loop
-			}
 		case <-h.delay.Done():
 			h.delay.Handler()
 		case <-h.ctx.Done():

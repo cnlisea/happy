@@ -153,11 +153,11 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 	}
 
 	h.pMgr.Add(userKey, existPlayer)
-	h.game.PlayerJoin(userKey, view)
-	h.game.PlayerOp(userKey, view)
+	h.game.PlayerJoin(userKey, exist, view)
 	if h.event != nil && h.event.PlayerJoinSuccess != nil {
 		h.event.PlayerJoinSuccess(h, userKey, h.pMgr, exist, h.extend)
 	}
+	h.game.PlayerOp(userKey, exist, view)
 
 	if !exist &&
 		h.roundBeginPolicy == RoundBeginPolicyFullPlayer &&

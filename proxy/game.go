@@ -16,8 +16,8 @@ type GameAuto struct {
 type Game interface {
 	Init(ctx context.Context, delay GameDelay, pMgr GamePMgr, pMsg PlayerMsg, log GameLog) error
 	PlayerMaxNum() int
-	PlayerJoin(userKey interface{}, view bool)
-	PlayerOp(userKey interface{}, view bool)
+	PlayerJoin(userKey interface{}, exist bool, view bool)
+	PlayerOp(userKey interface{}, exist bool, view bool)
 	PlayerExit(userKey interface{}, view bool)
 	PlayerOfflineKickOut() time.Duration
 	PlayerAuto(userKey interface{})

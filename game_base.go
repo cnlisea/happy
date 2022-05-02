@@ -28,9 +28,9 @@ func (g *GameBase) PlayerMaxNum() int {
 	return 0
 }
 
-func (g *GameBase) PlayerJoin(userKey interface{}, view bool) {}
+func (g *GameBase) PlayerJoin(userKey interface{}, exist bool, view bool) {}
 
-func (g *GameBase) PlayerOp(userKey interface{}, view bool) {}
+func (g *GameBase) PlayerOp(userKey interface{}, exist bool, view bool) {}
 
 func (g *GameBase) PlayerExit(userKey interface{}, view bool) {}
 

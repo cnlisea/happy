@@ -27,7 +27,7 @@ func (h *_Happy) MsgPlayerExitHandler(userKey interface{}) {
 		}
 	}
 	if h.event != nil && h.event.PlayerExit != nil {
-		h.event.PlayerExit(userKey, h.pMgr, h.extend)
+		h.event.PlayerExit(h, userKey, h.pMgr, h.extend)
 	}
 	h.pMgr.Del(userKey)
 

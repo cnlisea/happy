@@ -11,7 +11,7 @@ func Test_Happy_MsgByUser(t *testing.T) {
 	h := New(nil, 1, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})

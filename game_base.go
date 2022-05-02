@@ -12,13 +12,15 @@ type GameBase struct {
 	PMgr  proxy.GamePMgr
 	PMsg  proxy.PlayerMsg
 	Delay proxy.GameDelay
+	Log   proxy.GameLog
 }
 
-func (g *GameBase) Init(ctx context.Context, delay proxy.GameDelay, pMgr proxy.GamePMgr, pMsg proxy.PlayerMsg) error {
+func (g *GameBase) Init(ctx context.Context, delay proxy.GameDelay, pMgr proxy.GamePMgr, pMsg proxy.PlayerMsg, log proxy.GameLog) error {
 	g.Ctx = ctx
 	g.Delay = delay
 	g.PMgr = pMgr
 	g.PMsg = pMsg
+	g.Log = log
 	return nil
 }
 

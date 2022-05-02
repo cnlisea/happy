@@ -29,7 +29,8 @@ type Happy interface {
 	PlayerMsg(msg proxy.PlayerMsg)
 	Plugin(p *Plugin)
 	RoundBeginPolicy(policy RoundBeginPolicy)
-	Log(path string, level log.Level) error
+	LogSetting(path string, level log.Level) error
+	Log() *log.Logger
 }
 
 type _Happy struct {
@@ -104,7 +105,7 @@ func (h *_Happy) Init() error {
 
 			p.SetAuto(true)
 			if h.event != nil && h.event.PlayerAuto != nil {
-				h.event.PlayerAuto(key, h.pMgr, h.extend)
+				h.event.PlayerAuto(h, key, h.pMgr, h.extend)
 			}
 		},
 		Op: func(key interface{}) {
@@ -119,7 +120,7 @@ func (h *_Happy) Init() error {
 
 			p.SetOp(false)
 			if h.event != nil && h.event.PlayerOp != nil {
-				h.event.PlayerOp(key, h.pMgr, h.extend)
+				h.event.PlayerOp(h, key, h.pMgr, h.extend)
 			}
 			h.game.PlayerAuto(key)
 		},
@@ -127,7 +128,7 @@ func (h *_Happy) Init() error {
 
 	h.pMgr.Watch(pmgr.WatchKindLine, func(key interface{}, p *player.Player) {
 		if h.event != nil && h.event.PlayerLine != nil {
-			h.event.PlayerLine(key, h.pMgr, h.extend)
+			h.event.PlayerLine(h, key, h.pMgr, h.extend)
 		}
 
 		// 玩家踢出
@@ -135,12 +136,12 @@ func (h *_Happy) Init() error {
 	})
 	h.pMgr.Watch(pmgr.WatchKindReady, func(key interface{}, p *player.Player) {
 		if h.event != nil && h.event.PlayerReady != nil {
-			h.event.PlayerReady(key, h.pMgr, h.extend)
+			h.event.PlayerReady(h, key, h.pMgr, h.extend)
 		}
 	})
 	h.pMgr.Watch(pmgr.WatchKindOp, func(key interface{}, p *player.Player) {
 		if h.event != nil && h.event.PlayerOp != nil {
-			h.event.PlayerOp(key, h.pMgr, h.extend)
+			h.event.PlayerOp(h, key, h.pMgr, h.extend)
 		}
 		if p.Op() {
 			h.AutoPlayer(key)
@@ -148,7 +149,7 @@ func (h *_Happy) Init() error {
 	})
 	h.pMgr.Watch(pmgr.WatchKindAuto, func(key interface{}, p *player.Player) {
 		if h.event != nil && h.event.PlayerAuto != nil {
-			h.event.PlayerAuto(key, h.pMgr, h.extend)
+			h.event.PlayerAuto(h, key, h.pMgr, h.extend)
 		}
 		if p.Op() {
 			switch p.Auto() {
@@ -161,21 +162,21 @@ func (h *_Happy) Init() error {
 	})
 	h.pMgr.Watch(pmgr.WatchKindScore, func(key interface{}, p *player.Player) {
 		if h.event != nil && h.event.PlayerScore != nil {
-			h.event.PlayerScore(key, h.pMgr, h.extend)
+			h.event.PlayerScore(h, key, h.pMgr, h.extend)
 		}
 	})
 	h.pMgr.Watch(pmgr.WatchKindSite, func(key interface{}, p *player.Player) {
 		if h.event != nil && h.event.PlayerSite != nil {
-			h.event.PlayerSite(key, h.pMgr, h.extend)
+			h.event.PlayerSite(h, key, h.pMgr, h.extend)
 		}
 	})
 
 	if h.log == nil {
-		if err := h.Log("", log.LevelDebug); err != nil {
+		if err := h.LogSetting("", log.LevelDebug); err != nil {
 			return err
 		}
 	}
-	return h.game.Init(h.ctx, h, h.pMgr, h.playerMsg)
+	return h.game.Init(h.ctx, h, h.pMgr, h.playerMsg, h.log)
 }
 
 func (h *_Happy) Run(resume bool) {

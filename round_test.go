@@ -20,13 +20,13 @@ func Test_Happy_RoundBeginPolicyFullPlayer(t *testing.T) {
 	h := New(nil, 1, new(RoundBeginPolicyFullPlayerGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		RoundBegin: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("round begin", curRound, maxRound, pMgr.Len())
 		},
-		PlayerJoinSuccess: func(key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
+		PlayerJoinSuccess: func(h Happy, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
 			t.Log("user join", key, pMgr.Get(key))
 		},
-		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -50,16 +50,16 @@ func Test_Happy_RoundBeginPolicyAllPlayerReady(t *testing.T) {
 	h := New(nil, 1, new(RoundBeginPolicyFullPlayerGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		RoundBegin: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("round begin", curRound, maxRound, pMgr.Len())
 		},
-		PlayerJoinSuccess: func(key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
+		PlayerJoinSuccess: func(h Happy, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
 			t.Log("user join", key, pMgr.Get(key))
 		},
-		PlayerReady: func(key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+		PlayerReady: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("user ready", key, pMgr.Get(key).Ready())
 		},
-		Finish: func(curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})

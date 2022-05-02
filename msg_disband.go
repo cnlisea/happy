@@ -40,7 +40,7 @@ func (h *_Happy) MsgDisbandHandler(userKey interface{}) {
 					op[key] = o
 					return true
 				})
-				h.event.DisbandPass(ts, h.pMgr, op, h.extend)
+				h.event.DisbandPass(h, ts, h.pMgr, op, h.extend)
 			}
 			h.Finish(true)
 		})
@@ -51,7 +51,7 @@ func (h *_Happy) MsgDisbandHandler(userKey interface{}) {
 					op[key] = o
 					return true
 				})
-				h.event.DisbandFail(ts, h.pMgr, op, h.extend)
+				h.event.DisbandFail(h, ts, h.pMgr, op, h.extend)
 			}
 		})
 		h.disbandVote.CallbackAdd(func(ts time.Duration, deadlineTs int64, key interface{}, agree bool) {
@@ -65,9 +65,9 @@ func (h *_Happy) MsgDisbandHandler(userKey interface{}) {
 			})
 			switch agree {
 			case true:
-				h.event.DisbandAgree(ts, deadlineTs, userKey, h.pMgr, op, h.extend)
+				h.event.DisbandAgree(h, ts, deadlineTs, userKey, h.pMgr, op, h.extend)
 			default:
-				h.event.DisbandReject(ts, deadlineTs, userKey, h.pMgr, op, h.extend)
+				h.event.DisbandReject(h, ts, deadlineTs, userKey, h.pMgr, op, h.extend)
 			}
 		})
 	}

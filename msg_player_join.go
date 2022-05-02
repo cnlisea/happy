@@ -19,7 +19,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 		// 禁止观战
 		if view && !h.game.View() {
 			if h.event != nil && h.event.PlayerJoinFail != nil {
-				h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindViewOff, h.extend)
+				h.event.PlayerJoinFail(h, userKey, EventPlayerJoinFailKindViewOff, h.extend)
 			}
 			return
 		}
@@ -32,7 +32,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 			// 人数已满
 			if maxNum := h.game.PlayerMaxNum(); maxNum > 0 && gameNum >= maxNum {
 				if h.event != nil && h.event.PlayerJoinFail != nil {
-					h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindFull, h.extend)
+					h.event.PlayerJoinFail(h, userKey, EventPlayerJoinFailKindFull, h.extend)
 				}
 				return
 			}
@@ -42,7 +42,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 				pLocation := p.Location()
 				if pLocation == nil || pLocation.Ip == "" {
 					if h.event != nil && h.event.PlayerJoinFail != nil {
-						h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationOff, h.extend)
+						h.event.PlayerJoinFail(h, userKey, EventPlayerJoinFailKindLocationOff, h.extend)
 					}
 					return
 				}
@@ -62,7 +62,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 
 					if same {
 						if h.event != nil && h.event.PlayerJoinFail != nil {
-							h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationIpSame, h.extend)
+							h.event.PlayerJoinFail(h, userKey, EventPlayerJoinFailKindLocationIpSame, h.extend)
 						}
 						return
 					}
@@ -74,14 +74,14 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 			pLocation := p.Location()
 			if distanceLimit > 0 && (pLocation == nil || pLocation.Longitude == "" || pLocation.Latitude == "") {
 				if h.event != nil && h.event.PlayerJoinFail != nil {
-					h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationOff, h.extend)
+					h.event.PlayerJoinFail(h, userKey, EventPlayerJoinFailKindLocationOff, h.extend)
 				}
 				return
 			}
 
 			if distanceLimit > 0 && (h.plugin == nil || h.plugin.LocationDistance == nil) {
 				if h.event != nil && h.event.PlayerJoinFail != nil {
-					h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationTooClose, h.extend)
+					h.event.PlayerJoinFail(h, userKey, EventPlayerJoinFailKindLocationTooClose, h.extend)
 				}
 				return
 			}
@@ -114,7 +114,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 
 				if tooClose {
 					if h.event != nil && h.event.PlayerJoinFail != nil {
-						h.event.PlayerJoinFail(userKey, EventPlayerJoinFailKindLocationTooClose, h.extend)
+						h.event.PlayerJoinFail(h, userKey, EventPlayerJoinFailKindLocationTooClose, h.extend)
 					}
 					return
 				}
@@ -143,7 +143,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 
 		existPlayer = p
 		if h.costMode == CostModeJoin && h.event != nil && h.event.Cost != nil {
-			h.event.Cost(h.costMode, false, h.pMgr, h.extend)
+			h.event.Cost(h, h.costMode, false, h.pMgr, h.extend)
 		}
 	}
 
@@ -156,7 +156,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 	h.game.PlayerJoin(userKey, view)
 	h.game.PlayerOp(userKey, view)
 	if h.event != nil && h.event.PlayerJoinSuccess != nil {
-		h.event.PlayerJoinSuccess(userKey, h.pMgr, exist, h.extend)
+		h.event.PlayerJoinSuccess(h, userKey, h.pMgr, exist, h.extend)
 	}
 
 	if !exist &&

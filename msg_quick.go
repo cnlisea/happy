@@ -57,7 +57,7 @@ func (h *_Happy) MsgQuickHandler(userKey interface{}) {
 					op[key] = o
 					return true
 				})
-				h.event.QuickPass(ts, h.pMgr, op, h.extend)
+				h.event.QuickPass(h, ts, h.pMgr, op, h.extend)
 			}
 			h.RoundBegin(false, true)
 		})
@@ -68,7 +68,7 @@ func (h *_Happy) MsgQuickHandler(userKey interface{}) {
 					op[key] = o
 					return true
 				})
-				h.event.QuickFail(ts, h.pMgr, op, h.extend)
+				h.event.QuickFail(h, ts, h.pMgr, op, h.extend)
 			}
 		})
 		h.quickVote.CallbackAdd(func(ts time.Duration, deadlineTs int64, key interface{}, agree bool) {
@@ -82,9 +82,9 @@ func (h *_Happy) MsgQuickHandler(userKey interface{}) {
 			})
 			switch agree {
 			case true:
-				h.event.QuickAgree(ts, deadlineTs, userKey, h.pMgr, op, h.extend)
+				h.event.QuickAgree(h, ts, deadlineTs, userKey, h.pMgr, op, h.extend)
 			default:
-				h.event.QuickReject(ts, deadlineTs, userKey, h.pMgr, op, h.extend)
+				h.event.QuickReject(h, ts, deadlineTs, userKey, h.pMgr, op, h.extend)
 			}
 		})
 	}

@@ -11,13 +11,14 @@ func (h *_Happy) Heartbeat(interval time.Duration) error {
 		return errors.New("interval invalid")
 	}
 
-	if h.heartbeat != nil {
-		return errors.New("heartbeat already existed")
+	switch h.heartbeat {
+	case nil:
+		h.heartbeat = heartbeat.New(h.delay, interval, func() {
+			// 超时解散
+			h.Finish(false)
+		})
+	default:
+		h.heartbeat.Interval(interval)
 	}
-
-	h.heartbeat = heartbeat.New(h.delay, interval, func() {
-		// 超时解散
-		h.Finish(false)
-	})
 	return nil
 }

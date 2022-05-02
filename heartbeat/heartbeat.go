@@ -31,6 +31,16 @@ func New(delay proxy.Delay, interval time.Duration, fn ...func()) *Heartbeat {
 	return h
 }
 
+func (h *Heartbeat) Interval(interval time.Duration) {
+	if interval == 0 {
+		interval = time.Second
+	}
+
+	h.interval = interval
+	h.DelayDel()
+	h.DelayAdd(interval)
+}
+
 func (h *Heartbeat) Handler(ts int64, args interface{}) {
 	if ts-h.lastActiveTs < int64(h.interval) {
 		h.DelayAdd(time.Duration(h.lastActiveTs) + h.interval - time.Duration(ts))

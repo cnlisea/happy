@@ -17,6 +17,7 @@ import (
 )
 
 type Happy interface {
+	Context() context.Context
 	Init() error
 	Resume(begin bool, curRound uint32)
 	Run(resume bool)
@@ -69,6 +70,10 @@ func New(ctx context.Context, maxRound uint32, game proxy.Game, extend map[strin
 		maxRound: maxRound,
 		extend:   extend,
 	}
+}
+
+func (h *_Happy) Context() context.Context {
+	return h.ctx
 }
 
 func (h *_Happy) Resume(begin bool, curRound uint32) {

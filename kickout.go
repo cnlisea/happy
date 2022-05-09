@@ -27,7 +27,7 @@ func (h *_Happy) PlayerKickOut(userKey interface{}) {
 	if !p.Line() {
 		h.delay.Add(ts, func(ts int64, args interface{}) {
 			h.MsgPlayerExitHandler(args.(*_DelayPlayerKickOut).UserKey)
-		}, _DelayPlayerKickOut{
+		}, &_DelayPlayerKickOut{
 			UserKey: userKey,
 		})
 	}

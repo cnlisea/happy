@@ -101,27 +101,3 @@ func (p *Player) SetView(b bool) {
 func (p *Player) WatchView(f func(*Player)) {
 	p.watch["view"] = f
 }
-
-func (p *Player) Auto() bool {
-	return p.state&8 == 8
-}
-
-func (p *Player) SetAuto(b bool) {
-	if p.Auto() == b {
-		return
-	}
-
-	if b {
-		p.state |= 8
-	} else {
-		p.state ^= 8
-	}
-
-	if f := p.watch["auto"]; f != nil {
-		f(p)
-	}
-}
-
-func (p *Player) WatchAuto(f func(*Player)) {
-	p.watch["auto"] = f
-}

@@ -14,7 +14,11 @@ func (h *_Happy) AutoPlayer(userKey interface{}) {
 		return
 	}
 
-	h.auto.Add(userKey, p.Op())
+	auto := p.Auto()
+	h.auto.Add(userKey, auto)
+	if !auto {
+		p.SetAutoTs(h.auto.AutoTs(userKey, false))
+	}
 }
 
 func (h *_Happy) AutoPlayerDel(userKey interface{}) {
@@ -32,4 +36,5 @@ func (h *_Happy) AutoPlayerDel(userKey interface{}) {
 	}
 
 	h.auto.Del(userKey)
+	p.SetAutoTs(0)
 }

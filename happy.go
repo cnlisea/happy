@@ -109,9 +109,7 @@ func (h *_Happy) Init() error {
 			}
 
 			p.SetAuto(true)
-			if h.event != nil && h.event.PlayerAuto != nil {
-				h.event.PlayerAuto(h, key, h.pMgr, h.extend)
-			}
+			p.SetAutoTs(0)
 		},
 		Op: func(key interface{}) {
 			p := h.pMgr.Get(key)
@@ -124,9 +122,6 @@ func (h *_Happy) Init() error {
 			}
 
 			p.SetOp(false)
-			if h.event != nil && h.event.PlayerOp != nil {
-				h.event.PlayerOp(h, key, h.pMgr, h.extend)
-			}
 			h.game.PlayerAuto(key)
 		},
 	})
@@ -162,6 +157,7 @@ func (h *_Happy) Init() error {
 				h.AutoPlayer(key)
 			default:
 				h.AutoPlayerDel(key)
+				h.AutoPlayer(key)
 			}
 		}
 	})

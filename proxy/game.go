@@ -22,7 +22,7 @@ type Game interface {
 	PlayerOfflineKickOut() time.Duration
 	PlayerAuto(userKey interface{})
 	Msg(userKey interface{}, data interface{})
-	Begin(quick bool)
+	Begin(quick bool, round uint32)
 	End()
 	Auto() *GameAuto
 	Quick(num int) bool

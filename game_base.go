@@ -41,7 +41,7 @@ func (g *GameBase) PlayerAuto(userKey interface{}) {}
 
 func (g *GameBase) Msg(userKey interface{}, data interface{}) {}
 
-func (g *GameBase) Begin(quick bool) {}
+func (g *GameBase) Begin(quick bool, round uint32) {}
 
 func (g *GameBase) End() {}
 

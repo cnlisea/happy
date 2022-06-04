@@ -40,7 +40,7 @@ func (h *_Happy) RoundBegin(resume bool, quick bool) {
 			h.event.Cost(h, h.costMode, false, h.pMgr, h.extend)
 		}
 	}
-	h.game.Begin(quick)
+	h.game.Begin(quick, h.curRound)
 }
 
 func (h *_Happy) RoundEnd() {

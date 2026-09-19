@@ -3,17 +3,18 @@ package happy
 import "github.com/cnlisea/happy/pmgr/player"
 
 func (h *_Happy) MsgPlayerExitHandler(userKey interface{}) {
-	if h.curRound > 0 {
-		return
-	}
-
 	p := h.pMgr.Get(userKey)
 	if p == nil {
 		return
 	}
 
-	h.game.PlayerExit(userKey, p.View())
-	if !p.View() {
+	view := p.View()
+	if !view && h.curRound > 0 {
+		return
+	}
+
+	h.game.PlayerExit(userKey, view)
+	if !view {
 		if h.plugin != nil && h.plugin.PlayerExitDisband != nil && h.plugin.PlayerExitDisband(userKey, h.ownerUserKey, h.extend) {
 			h.Finish(true)
 			return

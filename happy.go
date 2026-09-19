@@ -25,7 +25,7 @@ type Happy interface {
 	Event(e *Event)
 	Heartbeat(interval time.Duration) error
 	Msg(msg *proxy.Msg)
-	MsgByUser(f func(userKey interface{}, data interface{}, delay proxy.Delay, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}))
+	MsgByUser(f func(userKey interface{}, data interface{}, delay proxy.Delay, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}))
 	Owner(userKey interface{})
 	PlayerMsg(msg proxy.PlayerMsg)
 	Plugin(p *Plugin)
@@ -46,7 +46,7 @@ type _Happy struct {
 	disbandVote        *vote.Vote
 	quickVote          *vote.Vote
 	msgChan            chan *proxy.Msg
-	byUserHandler      func(userKey interface{}, data interface{}, delay proxy.Delay, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{})
+	byUserHandler      func(userKey interface{}, data interface{}, delay proxy.Delay, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{})
 	playerMsg          proxy.PlayerMsg
 	roundBeginPolicy   RoundBeginPolicy
 	ownerUserKey       interface{}

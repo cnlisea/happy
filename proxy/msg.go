@@ -8,6 +8,7 @@ const (
 	MsgKindPlayerJoin    MsgKind = iota // 玩家加入
 	MsgKindPlayerExit                   // 玩家退出
 	MsgKindPlayerReady                  // 玩家准备
+	MsgKindPlayerKickOut                // 玩家踢出
 	MsgKindDisband                      // 申请解散
 	MsgKindDisbandReject                // 拒绝解散
 	MsgKindQuick                        // 申请少人开局

@@ -72,6 +72,8 @@ func (h *_Happy) MsgHandler(msg *proxy.Msg) {
 	case proxy.MsgKindDisbandForce:
 		// 强制解散房间
 		h.Finish(true)
+	case proxy.MsgKindPlayerKickOut:
+		h.MsgPlayerKickOutHandler(msg.UserKey, msg.Data)
 	case proxy.MsgKindGame:
 		h.MsgGameHandler(msg.UserKey, msg.Data)
 	case proxy.MsgKindByUser:

@@ -21,6 +21,7 @@ type Event struct {
 	PlayerJoinSuccess func(h Happy, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{})
 	PlayerJoinFail    func(h Happy, key interface{}, kind EventPlayerJoinFailKind, extend map[string]interface{})
 	PlayerExit        func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
+	PlayerKickOut     func(h Happy, key interface{}, data interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerReady       func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerLine        func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerOp          func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})

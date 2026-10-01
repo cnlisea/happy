@@ -40,7 +40,7 @@ func (h *_Happy) RoundBegin(resume bool, quick bool) {
 			h.event.Cost(h, h.costMode, false, h.pMgr, h.extend)
 		}
 	}
-	h.game.Begin(quick, h.curRound)
+	h.game.Begin(quick, h.curRound, h.maxRound)
 }
 
 func (h *_Happy) RoundEnd() {
@@ -58,9 +58,9 @@ func (h *_Happy) RoundEnd() {
 			h.event.Cost(h, h.costMode, false, h.pMgr, h.extend)
 		}
 	}
-	h.game.End()
+	h.game.End(h.curRound, h.maxRound)
 
 	if h.curRound == h.maxRound {
-		h.Finish(false)
+		h.Finish(false, false)
 	}
 }

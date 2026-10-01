@@ -68,10 +68,10 @@ func (h *_Happy) MsgHandler(msg *proxy.Msg) {
 		if h.curRound > 0 {
 			break
 		}
-		h.Finish(true)
+		h.Finish(true, false)
 	case proxy.MsgKindDisbandForce:
 		// 强制解散房间
-		h.Finish(true)
+		h.Finish(true, false)
 	case proxy.MsgKindPlayerKickOut:
 		h.MsgPlayerKickOutHandler(msg.UserKey, msg.Data)
 	case proxy.MsgKindGame:

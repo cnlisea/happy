@@ -16,7 +16,7 @@ func Test_Happy_EventRoundBegin(t *testing.T) {
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("round begin", curRound, maxRound, pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -59,7 +59,7 @@ func Test_Happy_EventRoundEnd(t *testing.T) {
 		RoundEnd: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("round end", curRound, maxRound, pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -94,7 +94,7 @@ func Test_Happy_EventPlayerJoinSuccess(t *testing.T) {
 		PlayerJoinSuccess: func(h Happy, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
 			t.Log("user join success", key, pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -129,7 +129,7 @@ func Test_Happy_EventPlayerJoinFail_Full(t *testing.T) {
 		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("join fail", key, kind)
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -164,7 +164,7 @@ func Test_Happy_EventPlayerJoinFail_ViewOff(t *testing.T) {
 		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("join fail", key, view, kind)
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -223,7 +223,7 @@ func Test_Happy_EventPlayerJoinFail_LocationOff(t *testing.T) {
 		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("join fail", key, view, kind)
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -266,7 +266,7 @@ func Test_Happy_EventPlayerJoinFail_LocationIpSame(t *testing.T) {
 		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("join fail", key, view, kind)
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -321,7 +321,7 @@ func Test_Happy_EventPlayerJoinFail_LocationTooClose(t *testing.T) {
 		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("join fail", key, view, kind)
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -376,7 +376,7 @@ func Test_Happy_EventPlayerExit(t *testing.T) {
 		PlayerExit: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("player exit", key, pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -407,7 +407,7 @@ func Test_Happy_EventPlayerReady(t *testing.T) {
 		PlayerReady: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("player ready", key, pMgr.Get(key).Ready(), pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -441,7 +441,7 @@ func Test_Happy_EventPlayerLine(t *testing.T) {
 		PlayerLine: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("player line", key, pMgr.Get(key).OfflineTs(), pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -471,7 +471,7 @@ func Test_Happy_EventPlayerOp(t *testing.T) {
 		PlayerOp: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("player op", key, pMgr.Get(key).Op(), pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -503,7 +503,7 @@ func Test_Happy_EventPlayerAuto(t *testing.T) {
 		PlayerAuto: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("player auto", key, pMgr.Get(key).Auto(), pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -543,7 +543,7 @@ func Test_Happy_EventPlayerSite(t *testing.T) {
 		PlayerSite: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("player site", key, pMgr.Get(key).Site(), pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -577,7 +577,7 @@ func Test_Happy_EventPlayerScore(t *testing.T) {
 		PlayerScore: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("player score", key, pMgr.Get(key).Score(0), pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -614,7 +614,7 @@ func Test_Happy_EventCost_Join(t *testing.T) {
 		Cost: func(h Happy, mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("cost", mode, back, pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -642,7 +642,7 @@ func Test_Happy_EventCost_FirstRoundBegin(t *testing.T) {
 		Cost: func(h Happy, mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("cost", mode, back, pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -683,7 +683,7 @@ func Test_Happy_EventCost_FirstRoundEnd(t *testing.T) {
 		Cost: func(h Happy, mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("cost", mode, back, pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -737,7 +737,7 @@ func Test_Happy_EventCost_RoundBegin(t *testing.T) {
 		Cost: func(h Happy, mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("cost", mode, back, pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -791,7 +791,7 @@ func Test_Happy_EventCost_RoundEnd(t *testing.T) {
 		Cost: func(h Happy, mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("cost", mode, back, pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -845,7 +845,7 @@ func Test_Happy_EventCost_Finish(t *testing.T) {
 		Cost: func(h Happy, mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("cost", mode, back, pMgr.Len())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -895,7 +895,7 @@ func Test_Happy_EventDisband(t *testing.T) {
 		RoundEnd: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("round end", curRound, maxRound)
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 		DisbandAgree: func(h Happy, ts time.Duration, deadlineTs int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
@@ -990,7 +990,7 @@ func Test_Happy_EventQuick(t *testing.T) {
 		QuickFail: func(h Happy, deadlineTs int64, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
 			t.Log("quick fail", deadlineTs, pMgr.Len(), op)
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})

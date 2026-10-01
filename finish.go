@@ -1,7 +1,7 @@
 package happy
 
-func (h *_Happy) Finish(disband bool) {
-	h.game.Finish(disband)
+func (h *_Happy) Finish(disband bool, owner bool) {
+	h.game.Finish(disband, h.begin)
 
 	if h.curRound > 0 && h.costMode == CostModeFinish {
 		if h.event != nil && h.event.Cost != nil {
@@ -14,7 +14,7 @@ func (h *_Happy) Finish(disband bool) {
 	}
 
 	if h.event != nil && h.event.Finish != nil {
-		h.event.Finish(h, h.curRound, h.maxRound, h.pMgr, disband, h.extend)
+		h.event.Finish(h, h.begin, h.curRound, h.maxRound, h.pMgr, disband, owner, h.extend)
 	}
 
 	if h.msgChan != nil {

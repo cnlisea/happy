@@ -234,7 +234,7 @@ Loop:
 		case <-h.delay.Done():
 			h.delay.Handler()
 		case <-h.ctx.Done():
-			h.Finish(false)
+			h.Finish(false, false)
 		}
 	}
 }

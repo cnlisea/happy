@@ -42,7 +42,7 @@ func (h *_Happy) MsgDisbandHandler(userKey interface{}) {
 				})
 				h.event.DisbandPass(h, ts, h.pMgr, op, h.extend)
 			}
-			h.Finish(true)
+			h.Finish(true, false)
 		})
 		h.disbandVote.CallbackFail(func(ts int64) {
 			if h.event != nil && h.event.DisbandFail != nil {

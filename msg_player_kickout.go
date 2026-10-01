@@ -12,14 +12,14 @@ func (h *_Happy) MsgPlayerKickOutHandler(userKey any, data any) {
 	h.game.PlayerExit(userKey, view)
 	if !view {
 		if h.plugin != nil && h.plugin.PlayerExitDisband != nil && h.plugin.PlayerExitDisband(userKey, h.ownerUserKey, h.extend) {
-			h.Finish(true)
+			h.Finish(true, true)
 			return
 		}
 
 		if h.pMgr.Len(func(p *player.Player) bool {
 			return !p.View()
 		}) == 0 {
-			h.Finish(true)
+			h.Finish(true, false)
 			return
 		}
 	}

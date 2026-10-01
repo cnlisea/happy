@@ -37,7 +37,7 @@ type Event struct {
 	QuickReject       func(h Happy, ts time.Duration, deadlineTs int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{})
 	QuickPass         func(h Happy, deadlineTs int64, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{})
 	QuickFail         func(h Happy, deadlineTs int64, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{})
-	Finish            func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{})
+	Finish            func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{})
 }
 
 func (h *_Happy) Event(e *Event) {

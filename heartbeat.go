@@ -15,7 +15,7 @@ func (h *_Happy) Heartbeat(interval time.Duration) error {
 	case nil:
 		h.heartbeat = heartbeat.New(h.delay, interval, func() {
 			// 超时解散
-			h.Finish(false)
+			h.Finish(false, false)
 		})
 	default:
 		h.heartbeat.Interval(interval)

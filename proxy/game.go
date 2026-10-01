@@ -22,8 +22,8 @@ type Game interface {
 	PlayerOfflineKickOut() time.Duration
 	PlayerAuto(userKey interface{})
 	Msg(userKey interface{}, data interface{})
-	Begin(quick bool, round uint32)
-	End()
+	Begin(quick bool, round, maxRound uint32)
+	End(round, maxRound uint32)
 	Auto() *GameAuto
 	Quick(num int) bool
 	QuickTs() time.Duration
@@ -31,7 +31,7 @@ type Game interface {
 	DisbandTs() time.Duration
 	IpLimit() bool
 	DistanceLimit() int
-	Finish(disband bool)
+	Finish(disband bool, begin bool)
 }
 
 type GameDelay interface {

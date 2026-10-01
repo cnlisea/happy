@@ -41,9 +41,9 @@ func (g *GameBase) PlayerAuto(userKey interface{}) {}
 
 func (g *GameBase) Msg(userKey interface{}, data interface{}) {}
 
-func (g *GameBase) Begin(quick bool, round uint32) {}
+func (g *GameBase) Begin(quick bool, round, maxRound uint32) {}
 
-func (g *GameBase) End() {}
+func (g *GameBase) End(round, maxRound uint32) {}
 
 func (g *GameBase) GameEnd() {
 	panic(PanicGameEnd)
@@ -77,4 +77,4 @@ func (g *GameBase) DistanceLimit() int {
 	return 0
 }
 
-func (g *GameBase) Finish(disband bool) {}
+func (g *GameBase) Finish(disband bool, owner bool) {}

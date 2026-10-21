@@ -11,11 +11,11 @@ func Test_Happy_MsgByUser(t *testing.T) {
 	h := New(nil, 1, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
-	h.MsgByUser(func(userKey interface{}, data interface{}, delay proxy.Delay, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+	h.MsgByUser(func(userKey interface{}, data interface{}, delay proxy.Delay, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 		t.Log("userKey", userKey, "data", data)
 	})
 	h.Init()

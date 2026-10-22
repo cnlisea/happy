@@ -1,6 +1,6 @@
 module github.com/cnlisea/happy
 
-go 1.17
+go 1.25.0
 
 require go.uber.org/zap v1.21.0
 

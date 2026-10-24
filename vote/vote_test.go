@@ -16,9 +16,9 @@ func TestVote_FullAgree(t *testing.T) {
 		t.Log("vote fail")
 	})
 
-	v.Add(1, true)
+	v.Add(1, true, nil)
 	t.Log("vote 1")
-	v.Add(2, true)
+	v.Add(2, true, nil)
 	t.Log("vote 2")
 }
 
@@ -31,7 +31,7 @@ func TestVote_OneFail(t *testing.T) {
 		t.Log("vote fail")
 	})
 
-	v.Add(1, false)
+	v.Add(1, false, nil)
 	t.Log("vote 1")
 }
 
@@ -44,11 +44,11 @@ func TestVote_ManyAgree(t *testing.T) {
 		t.Log("vote fail")
 	})
 
-	v.Add(1, true)
+	v.Add(1, true, nil)
 	t.Log("vote 1")
-	v.Add(2, true)
+	v.Add(2, true, nil)
 	t.Log("vote 2")
-	v.Add(3, true)
+	v.Add(3, true, nil)
 	t.Log("vote 3")
 }
 
@@ -62,11 +62,11 @@ func TestVote_FullEnd(t *testing.T) {
 	})
 	v.FullEnd()
 
-	v.Add(1, true)
+	v.Add(1, true, nil)
 	t.Log("vote 1")
-	v.Add(2, true)
+	v.Add(2, true, nil)
 	t.Log("vote 2")
-	v.Add(3, false)
+	v.Add(3, false, nil)
 	t.Log("vote 3")
 }
 
@@ -87,11 +87,11 @@ func TestVote_Deadline(t *testing.T) {
 	default:
 	}
 
-	v.Add(1, true)
+	v.Add(1, true, nil)
 	t.Log("vote 1")
-	v.Add(2, true)
+	v.Add(2, true, nil)
 	t.Log("vote 2")
-	v.Add(3, false)
+	v.Add(3, false, nil)
 	t.Log("vote 3")
 }
 
@@ -112,11 +112,11 @@ func TestVote_DeadlinePass(t *testing.T) {
 	default:
 	}
 
-	v.Add(1, true)
+	v.Add(1, true, nil)
 	t.Log("vote 1")
-	v.Add(2, true)
+	v.Add(2, true, nil)
 	t.Log("vote 2")
-	v.Add(3, false)
+	v.Add(3, false, nil)
 	t.Log("vote 3")
 }
 
@@ -131,7 +131,7 @@ func TestVote_DeadlineFirst(t *testing.T) {
 	delayInstance := delay.New()
 	v.Deadline(delayInstance, time.Second, false, true)
 
-	v.Add(1, true)
+	v.Add(1, true, nil)
 	t.Log("vote 1")
 	time.Sleep(time.Second)
 	select {
@@ -139,8 +139,8 @@ func TestVote_DeadlineFirst(t *testing.T) {
 		delayInstance.Handler()
 	default:
 	}
-	v.Add(2, true)
+	v.Add(2, true, nil)
 	t.Log("vote 2")
-	v.Add(3, false)
+	v.Add(3, false, nil)
 	t.Log("vote 3")
 }

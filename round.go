@@ -21,7 +21,7 @@ func (h *_Happy) RoundBegin(resume bool, quick bool) {
 	}
 
 	h.pMgr.Range(func(key interface{}, p *player.Player) bool {
-		p.SetReady(false)
+		p.SetReady(false, nil)
 		return true
 	})
 
@@ -61,6 +61,6 @@ func (h *_Happy) RoundEnd() {
 	h.game.End(h.curRound, h.maxRound)
 
 	if h.curRound == h.maxRound {
-		h.Finish(false, false)
+		h.Finish(false, false, nil)
 	}
 }

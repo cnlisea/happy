@@ -9,10 +9,10 @@ func (h *_Happy) MsgByUser(f func(userKey interface{}, data interface{}, delay p
 	h.byUserHandler = f
 }
 
-func (h *_Happy) MsgByUserHandler(userKey interface{}, data interface{}) {
+func (h *_Happy) MsgByUserHandler(userKey interface{}, data interface{}, ext map[string]any) {
 	if h.byUserHandler == nil {
 		return
 	}
 
-	h.byUserHandler(userKey, data, h.delay, h.begin, h.curRound, h.maxRound, h.pMgr, h.extend)
+	h.byUserHandler(userKey, data, h.delay, h.begin, h.curRound, h.maxRound, h.pMgr, h.CopyExtend(ext))
 }

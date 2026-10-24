@@ -43,40 +43,40 @@ func (h *_Happy) MsgHandler(msg *proxy.Msg) {
 	switch msg.Kind {
 	case proxy.MsgKindPlayerJoin:
 		if data, ok := msg.Data.(*proxy.MsgKindPlayerJoinData); ok && data != nil {
-			h.MsgPlayerJoinHandler(msg.UserKey, data.Player)
+			h.MsgPlayerJoinHandler(msg.UserKey, data.Player, msg.Ext)
 		}
 	case proxy.MsgKindPlayerExit:
-		h.MsgPlayerExitHandler(msg.UserKey)
+		h.MsgPlayerExitHandler(msg.UserKey, msg.Ext)
 	case proxy.MsgKindPlayerReady:
 		if data, ok := msg.Data.(*proxy.MsgKindPlayerReadyData); ok && data != nil {
-			h.MsgPlayerReadyHandler(msg.UserKey, data.Site)
+			h.MsgPlayerReadyHandler(msg.UserKey, data.Site, msg.Ext)
 		}
 	case proxy.MsgKindDisband:
 		// 申请解散
-		h.MsgDisbandHandler(msg.UserKey)
+		h.MsgDisbandHandler(msg.UserKey, msg.Ext)
 	case proxy.MsgKindDisbandReject:
 		// 拒绝解散
-		h.MsgDisbandRejectHandler(msg.UserKey)
+		h.MsgDisbandRejectHandler(msg.UserKey, msg.Ext)
 	case proxy.MsgKindQuick:
 		// 申请少人开局
-		h.MsgQuickHandler(msg.UserKey)
+		h.MsgQuickHandler(msg.UserKey, msg.Ext)
 	case proxy.MsgKindQuickReject:
 		// 拒绝少人开局
-		h.MsgQuickRejectHandler(msg.UserKey)
+		h.MsgQuickRejectHandler(msg.UserKey, msg.Ext)
 	case proxy.MsgKindDisbandIdle:
 		// 解散房间
 		if h.curRound > 0 {
 			break
 		}
-		h.Finish(true, false)
+		h.Finish(true, false, msg.Ext)
 	case proxy.MsgKindDisbandForce:
 		// 强制解散房间
-		h.Finish(true, false)
+		h.Finish(true, false, msg.Ext)
 	case proxy.MsgKindPlayerKickOut:
-		h.MsgPlayerKickOutHandler(msg.UserKey, msg.Data)
+		h.MsgPlayerKickOutHandler(msg.UserKey, msg.Data, msg.Ext)
 	case proxy.MsgKindGame:
-		h.MsgGameHandler(msg.UserKey, msg.Data)
+		h.MsgGameHandler(msg.UserKey, msg.Data, msg.Ext)
 	case proxy.MsgKindByUser:
-		h.MsgByUserHandler(msg.UserKey, msg.Data)
+		h.MsgByUserHandler(msg.UserKey, msg.Data, msg.Ext)
 	}
 }

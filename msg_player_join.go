@@ -4,7 +4,7 @@ import (
 	"github.com/cnlisea/happy/pmgr/player"
 )
 
-func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
+func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player, ext map[string]any) {
 	if p == nil {
 		return
 	}
@@ -14,12 +14,12 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 		exist       = existPlayer != nil
 		view        = !exist && h.curRound > 0 || exist && existPlayer.View()
 	)
-	p.SetView(view)
+	p.SetView(view, nil)
 	if !exist {
 		// 禁止观战
 		if view && !h.game.View() {
 			if h.event != nil && h.event.PlayerJoinFail != nil {
-				h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindViewOff, h.extend)
+				h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindViewOff, h.CopyExtend(ext))
 			}
 			return
 		}
@@ -32,7 +32,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 			// 人数已满
 			if maxNum := h.game.PlayerMaxNum(); maxNum > 0 && gameNum >= maxNum {
 				if h.event != nil && h.event.PlayerJoinFail != nil {
-					h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindFull, h.extend)
+					h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindFull, h.CopyExtend(ext))
 				}
 				return
 			}
@@ -42,7 +42,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 				pLocation := p.Location()
 				if pLocation == nil || pLocation.Ip == "" {
 					if h.event != nil && h.event.PlayerJoinFail != nil {
-						h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindLocationOff, h.extend)
+						h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindLocationOff, h.CopyExtend(ext))
 					}
 					return
 				}
@@ -62,7 +62,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 
 					if same {
 						if h.event != nil && h.event.PlayerJoinFail != nil {
-							h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindLocationIpSame, h.extend)
+							h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindLocationIpSame, h.CopyExtend(ext))
 						}
 						return
 					}
@@ -74,14 +74,14 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 			pLocation := p.Location()
 			if distanceLimit > 0 && (pLocation == nil || pLocation.Longitude == "" || pLocation.Latitude == "") {
 				if h.event != nil && h.event.PlayerJoinFail != nil {
-					h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindLocationOff, h.extend)
+					h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindLocationOff, h.CopyExtend(ext))
 				}
 				return
 			}
 
 			if distanceLimit > 0 && (h.plugin == nil || h.plugin.LocationDistance == nil) {
 				if h.event != nil && h.event.PlayerJoinFail != nil {
-					h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindLocationTooClose, h.extend)
+					h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindLocationTooClose, h.CopyExtend(ext))
 				}
 				return
 			}
@@ -114,7 +114,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 
 				if tooClose {
 					if h.event != nil && h.event.PlayerJoinFail != nil {
-						h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindLocationTooClose, h.extend)
+						h.event.PlayerJoinFail(h, userKey, view, EventPlayerJoinFailKindLocationTooClose, h.CopyExtend(ext))
 					}
 					return
 				}
@@ -134,7 +134,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 					site++
 				}
 			}
-			p.SetSite(site)
+			p.SetSite(site, nil)
 			// cancel quick vote
 			if h.quickVote != nil {
 				h.quickVote.Cancel()
@@ -155,7 +155,7 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player) {
 	h.pMgr.Add(userKey, existPlayer)
 	h.game.PlayerJoin(userKey, exist, view)
 	if h.event != nil && h.event.PlayerJoinSuccess != nil {
-		h.event.PlayerJoinSuccess(h, userKey, h.pMgr, exist, h.extend)
+		h.event.PlayerJoinSuccess(h, userKey, h.pMgr, exist, h.CopyExtend(ext))
 	}
 	h.game.PlayerOp(userKey, exist, view)
 

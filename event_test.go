@@ -234,7 +234,7 @@ func Test_Happy_EventPlayerJoinFail_LocationOff(t *testing.T) {
 		p := player.New()
 		p.SetLocation(&player.Location{
 			//Ip: "127.0.0.1",
-		})
+		}, nil)
 		h.Msg(&proxy.Msg{
 			Kind:    proxy.MsgKindPlayerJoin,
 			UserKey: 1,
@@ -277,7 +277,7 @@ func Test_Happy_EventPlayerJoinFail_LocationIpSame(t *testing.T) {
 		p := player.New()
 		p.SetLocation(&player.Location{
 			Ip: "127.0.0.1",
-		})
+		}, nil)
 		h.Msg(&proxy.Msg{
 			Kind:    proxy.MsgKindPlayerJoin,
 			UserKey: 1,
@@ -289,7 +289,7 @@ func Test_Happy_EventPlayerJoinFail_LocationIpSame(t *testing.T) {
 		p = player.New()
 		p.SetLocation(&player.Location{
 			Ip: "127.0.0.1",
-		})
+		}, nil)
 		h.Msg(&proxy.Msg{
 			Kind:    proxy.MsgKindPlayerJoin,
 			UserKey: 2,
@@ -343,7 +343,7 @@ func Test_Happy_EventPlayerJoinFail_LocationTooClose(t *testing.T) {
 		p.SetLocation(&player.Location{
 			Longitude: "111",
 			Latitude:  "1111",
-		})
+		}, nil)
 		h.Msg(&proxy.Msg{
 			Kind:    proxy.MsgKindPlayerJoin,
 			UserKey: 1,
@@ -356,7 +356,7 @@ func Test_Happy_EventPlayerJoinFail_LocationTooClose(t *testing.T) {
 		p.SetLocation(&player.Location{
 			Longitude: "222",
 			Latitude:  "222",
-		})
+		}, nil)
 		h.Msg(&proxy.Msg{
 			Kind:    proxy.MsgKindPlayerJoin,
 			UserKey: 2,
@@ -458,7 +458,7 @@ func Test_Happy_EventPlayerLine(t *testing.T) {
 		})
 
 		time.Sleep(1 * time.Second)
-		p.Offline(0)
+		p.Offline(0, nil)
 	}()
 	t.Log("run", time.Now().Unix())
 	h.Run(false)
@@ -488,9 +488,9 @@ func Test_Happy_EventPlayerOp(t *testing.T) {
 		})
 
 		time.Sleep(1 * time.Second)
-		p.SetOp(true)
+		p.SetOp(true, nil)
 		time.Sleep(1 * time.Second)
-		p.SetOp(false)
+		p.SetOp(false, nil)
 	}()
 	t.Log("run", time.Now().Unix())
 	h.Run(false)
@@ -520,9 +520,9 @@ func Test_Happy_EventPlayerAuto(t *testing.T) {
 		})
 
 		time.Sleep(1 * time.Second)
-		p.SetAuto(true)
+		p.SetAuto(true, nil)
 		time.Sleep(1 * time.Second)
-		p.SetAuto(false)
+		p.SetAuto(false, nil)
 	}()
 	t.Log("run", time.Now().Unix())
 	h.Run(false)
@@ -593,7 +593,7 @@ func Test_Happy_EventPlayerScore(t *testing.T) {
 			},
 		})
 		time.Sleep(time.Second)
-		p.AddScore(10)
+		p.AddScore(10, nil)
 	}()
 	t.Log("run", time.Now().Unix())
 	h.Run(false)

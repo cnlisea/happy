@@ -16,7 +16,7 @@ const (
 	WatchKindExtend                    // 扩展
 )
 
-type Watch func(key interface{}, p *player.Player)
+type Watch func(key interface{}, p *player.Player, ext map[string]any)
 
 func (pm *PMgr) Watch(kind WatchKind, watch Watch) {
 	pm.watch[kind] = watch

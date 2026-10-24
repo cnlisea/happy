@@ -11,13 +11,13 @@ func (p *Player) Location() *Location {
 	return p.location
 }
 
-func (p *Player) SetLocation(location *Location) {
+func (p *Player) SetLocation(location *Location, ext map[string]any) {
 	p.location = location
 	if f := p.watch["location"]; f != nil {
-		f(p)
+		f(p, ext)
 	}
 }
 
-func (p *Player) WatchLocation(f func(*Player)) {
+func (p *Player) WatchLocation(f func(*Player, map[string]any)) {
 	p.watch["location"] = f
 }

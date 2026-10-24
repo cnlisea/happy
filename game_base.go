@@ -39,7 +39,7 @@ func (g *GameBase) PlayerOfflineKickOut() time.Duration {
 
 func (g *GameBase) PlayerAuto(userKey interface{}) {}
 
-func (g *GameBase) Msg(begin bool, userKey interface{}, data interface{}) {}
+func (g *GameBase) Msg(begin bool, userKey interface{}, data interface{}, ext map[string]any) {}
 
 func (g *GameBase) Begin(quick bool, round, maxRound uint32) {}
 

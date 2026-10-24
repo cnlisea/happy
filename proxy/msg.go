@@ -31,4 +31,5 @@ type Msg struct {
 	Kind    MsgKind
 	UserKey interface{}
 	Data    interface{}
+	Ext     map[string]any
 }

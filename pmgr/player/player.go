@@ -11,12 +11,12 @@ type Player struct {
 
 	extend map[string]interface{} // 扩展信息
 
-	watch map[string]func(*Player)
+	watch map[string]func(*Player, map[string]any)
 }
 
 func New() *Player {
 	return &Player{
 		extend: make(map[string]interface{}),
-		watch:  make(map[string]func(*Player)),
+		watch:  make(map[string]func(*Player, map[string]any)),
 	}
 }

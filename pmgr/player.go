@@ -51,57 +51,57 @@ func (pm *PMgr) Add(key interface{}, p *player.Player) {
 	for kind, watch = range pm.watch {
 		switch kind {
 		case WatchKindLine:
-			newPlayer.WatchLine(func(key interface{}, watch Watch) func(p *player.Player) {
-				return func(p *player.Player) {
-					watch(key, p)
+			newPlayer.WatchLine(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
 				}
 			}(key, watch))
 		case WatchKindReady:
-			newPlayer.WatchReady(func(key interface{}, watch Watch) func(p *player.Player) {
-				return func(p *player.Player) {
-					watch(key, p)
+			newPlayer.WatchReady(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
 				}
 			}(key, watch))
 		case WatchKindOp:
-			newPlayer.WatchOp(func(key interface{}, watch Watch) func(p *player.Player) {
-				return func(p *player.Player) {
-					watch(key, p)
+			newPlayer.WatchOp(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
 				}
 			}(key, watch))
 		case WatchKindView:
-			newPlayer.WatchView(func(key interface{}, watch Watch) func(p *player.Player) {
-				return func(p *player.Player) {
-					watch(key, p)
+			newPlayer.WatchView(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
 				}
 			}(key, watch))
 		case WatchKindAuto:
-			newPlayer.WatchAuto(func(key interface{}, watch Watch) func(p *player.Player) {
-				return func(p *player.Player) {
-					watch(key, p)
+			newPlayer.WatchAuto(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
 				}
 			}(key, watch))
 		case WatchKindLocation:
-			newPlayer.WatchLocation(func(key interface{}, watch Watch) func(p *player.Player) {
-				return func(p *player.Player) {
-					watch(key, p)
+			newPlayer.WatchLocation(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
 				}
 			}(key, watch))
 		case WatchKindScore:
-			newPlayer.WatchScore(func(key interface{}, watch Watch) func(p *player.Player) {
-				return func(p *player.Player) {
-					watch(key, p)
+			newPlayer.WatchScore(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
 				}
 			}(key, watch))
 		case WatchKindSite:
-			newPlayer.WatchSite(func(key interface{}, watch Watch) func(p *player.Player) {
-				return func(p *player.Player) {
-					watch(key, p)
+			newPlayer.WatchSite(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
 				}
 			}(key, watch))
 		case WatchKindExtend:
-			newPlayer.WatchExtend(func(key interface{}, watch Watch) func(p *player.Player) {
-				return func(p *player.Player) {
-					watch(key, p)
+			newPlayer.WatchExtend(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
 				}
 			}(key, watch))
 		}

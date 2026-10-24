@@ -4,7 +4,7 @@ import (
 	"github.com/cnlisea/happy/pmgr/player"
 )
 
-func (h *_Happy) MsgPlayerReadyHandler(userKey interface{}, site uint32) {
+func (h *_Happy) MsgPlayerReadyHandler(userKey interface{}, site uint32, ext map[string]any) {
 	if h.begin {
 		return
 	}
@@ -38,10 +38,10 @@ func (h *_Happy) MsgPlayerReadyHandler(userKey interface{}, site uint32) {
 			return
 		}
 
-		p.SetSite(site)
+		p.SetSite(site, nil)
 	}
 
-	p.SetReady(!p.Ready())
+	p.SetReady(!p.Ready(), ext)
 
 	if maxNum := h.game.PlayerMaxNum(); maxNum <= 0 || h.pMgr.Len(func(p *player.Player) bool {
 		return !p.View()

@@ -26,7 +26,7 @@ func Test_Happy_RoundBeginPolicyFullPlayer(t *testing.T) {
 		PlayerJoinSuccess: func(h Happy, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
 			t.Log("user join", key, pMgr.Get(key))
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})
@@ -59,7 +59,7 @@ func Test_Happy_RoundBeginPolicyAllPlayerReady(t *testing.T) {
 		PlayerReady: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("user ready", key, pMgr.Get(key).Ready())
 		},
-		Finish: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, extend map[string]interface{}) {
+		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
 	})

@@ -22,16 +22,16 @@ func (p *Player) Score(index int) int32 {
 	return score
 }
 
-func (p *Player) AddScore(score int32) {
+func (p *Player) AddScore(score int32, ext map[string]any) {
 	if p.score == nil {
 		p.score = list.New()
 	}
 	p.score.PushBack(score)
 	if f := p.watch["score"]; f != nil {
-		f(p)
+		f(p, ext)
 	}
 }
 
-func (p *Player) WatchScore(f func(*Player)) {
+func (p *Player) WatchScore(f func(*Player, map[string]any)) {
 	p.watch["score"] = f
 }

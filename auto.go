@@ -17,7 +17,7 @@ func (h *_Happy) AutoPlayer(userKey interface{}) {
 	auto := p.Auto()
 	h.auto.Add(userKey, auto)
 	if !auto {
-		p.SetAutoTs(h.auto.AutoTs(userKey, false))
+		p.SetAutoTs(h.auto.AutoTs(userKey, false), nil)
 	}
 }
 
@@ -36,5 +36,5 @@ func (h *_Happy) AutoPlayerDel(userKey interface{}) {
 	}
 
 	h.auto.Del(userKey)
-	p.SetAutoTs(0)
+	p.SetAutoTs(0, nil)
 }

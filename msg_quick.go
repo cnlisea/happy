@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (h *_Happy) MsgQuickHandler(userKey interface{}) {
+func (h *_Happy) MsgQuickHandler(userKey interface{}, ext map[string]any) {
 	if h.curRound > 0 {
 		return
 	}
@@ -71,7 +71,7 @@ func (h *_Happy) MsgQuickHandler(userKey interface{}) {
 				h.event.QuickFail(h, ts, h.pMgr, op, h.extend)
 			}
 		})
-		h.quickVote.CallbackAdd(func(ts time.Duration, deadlineTs int64, key interface{}, agree bool) {
+		h.quickVote.CallbackAdd(func(ts time.Duration, deadlineTs int64, key interface{}, agree bool, ext map[string]any) {
 			if h.event == nil || (agree && h.event.QuickAgree == nil) || (!agree && h.event.QuickReject == nil) {
 				return
 			}
@@ -82,9 +82,9 @@ func (h *_Happy) MsgQuickHandler(userKey interface{}) {
 			})
 			switch agree {
 			case true:
-				h.event.QuickAgree(h, ts, deadlineTs, userKey, h.pMgr, op, h.extend)
+				h.event.QuickAgree(h, ts, deadlineTs, userKey, h.pMgr, op, h.CopyExtend(ext))
 			default:
-				h.event.QuickReject(h, ts, deadlineTs, userKey, h.pMgr, op, h.extend)
+				h.event.QuickReject(h, ts, deadlineTs, userKey, h.pMgr, op, h.CopyExtend(ext))
 			}
 		})
 	}
@@ -92,5 +92,5 @@ func (h *_Happy) MsgQuickHandler(userKey interface{}) {
 	if h.quickVote.End() {
 		h.quickVote.Reset()
 	}
-	h.quickVote.Add(userKey, true)
+	h.quickVote.Add(userKey, true, ext)
 }

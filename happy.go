@@ -108,8 +108,8 @@ func (h *_Happy) Init() error {
 				return
 			}
 
-			p.SetAuto(true)
-			p.SetAutoTs(0)
+			p.SetAuto(true, nil)
+			p.SetAutoTs(0, nil)
 		},
 		Op: func(key interface{}) {
 			p := h.pMgr.Get(key)
@@ -121,35 +121,35 @@ func (h *_Happy) Init() error {
 				return
 			}
 
-			p.SetOp(false)
+			p.SetOp(false, nil)
 			h.game.PlayerAuto(key)
 		},
 	})
 
-	h.pMgr.Watch(pmgr.WatchKindLine, func(key interface{}, p *player.Player) {
+	h.pMgr.Watch(pmgr.WatchKindLine, func(key interface{}, p *player.Player, ext map[string]any) {
 		if h.event != nil && h.event.PlayerLine != nil {
-			h.event.PlayerLine(h, key, h.pMgr, h.extend)
+			h.event.PlayerLine(h, key, h.pMgr, h.CopyExtend(ext))
 		}
 
 		// 玩家踢出
-		h.PlayerKickOut(key)
+		h.PlayerKickOut(key, ext)
 	})
-	h.pMgr.Watch(pmgr.WatchKindReady, func(key interface{}, p *player.Player) {
+	h.pMgr.Watch(pmgr.WatchKindReady, func(key interface{}, p *player.Player, ext map[string]any) {
 		if h.event != nil && h.event.PlayerReady != nil {
-			h.event.PlayerReady(h, key, h.pMgr, h.extend)
+			h.event.PlayerReady(h, key, h.pMgr, h.CopyExtend(ext))
 		}
 	})
-	h.pMgr.Watch(pmgr.WatchKindOp, func(key interface{}, p *player.Player) {
+	h.pMgr.Watch(pmgr.WatchKindOp, func(key interface{}, p *player.Player, ext map[string]any) {
 		if h.event != nil && h.event.PlayerOp != nil {
-			h.event.PlayerOp(h, key, h.pMgr, h.extend)
+			h.event.PlayerOp(h, key, h.pMgr, h.CopyExtend(ext))
 		}
 		if p.Op() {
 			h.AutoPlayer(key)
 		}
 	})
-	h.pMgr.Watch(pmgr.WatchKindAuto, func(key interface{}, p *player.Player) {
+	h.pMgr.Watch(pmgr.WatchKindAuto, func(key interface{}, p *player.Player, ext map[string]any) {
 		if h.event != nil && h.event.PlayerAuto != nil {
-			h.event.PlayerAuto(h, key, h.pMgr, h.extend)
+			h.event.PlayerAuto(h, key, h.pMgr, h.CopyExtend(ext))
 		}
 		if p.Op() {
 			switch p.Auto() {
@@ -161,14 +161,14 @@ func (h *_Happy) Init() error {
 			}
 		}
 	})
-	h.pMgr.Watch(pmgr.WatchKindScore, func(key interface{}, p *player.Player) {
+	h.pMgr.Watch(pmgr.WatchKindScore, func(key interface{}, p *player.Player, ext map[string]any) {
 		if h.event != nil && h.event.PlayerScore != nil {
-			h.event.PlayerScore(h, key, h.pMgr, h.extend)
+			h.event.PlayerScore(h, key, h.pMgr, h.CopyExtend(ext))
 		}
 	})
-	h.pMgr.Watch(pmgr.WatchKindSite, func(key interface{}, p *player.Player) {
+	h.pMgr.Watch(pmgr.WatchKindSite, func(key interface{}, p *player.Player, ext map[string]any) {
 		if h.event != nil && h.event.PlayerSite != nil {
-			h.event.PlayerSite(h, key, h.pMgr, h.extend)
+			h.event.PlayerSite(h, key, h.pMgr, h.CopyExtend(ext))
 		}
 	})
 
@@ -234,7 +234,7 @@ Loop:
 		case <-h.delay.Done():
 			h.delay.Handler()
 		case <-h.ctx.Done():
-			h.Finish(false, false)
+			h.Finish(false, false, nil)
 		}
 	}
 }

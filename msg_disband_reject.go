@@ -1,6 +1,6 @@
 package happy
 
-func (h *_Happy) MsgDisbandRejectHandler(userKey interface{}) {
+func (h *_Happy) MsgDisbandRejectHandler(userKey interface{}, ext map[string]any) {
 	if h.curRound == 0 {
 		return
 	}
@@ -13,5 +13,5 @@ func (h *_Happy) MsgDisbandRejectHandler(userKey interface{}) {
 		return
 	}
 
-	h.disbandVote.Add(userKey, false)
+	h.disbandVote.Add(userKey, false, ext)
 }

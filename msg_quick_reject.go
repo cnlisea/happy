@@ -1,6 +1,6 @@
 package happy
 
-func (h *_Happy) MsgQuickRejectHandler(userKey interface{}) {
+func (h *_Happy) MsgQuickRejectHandler(userKey interface{}, ext map[string]any) {
 	if h.curRound > 0 {
 		return
 	}
@@ -13,5 +13,5 @@ func (h *_Happy) MsgQuickRejectHandler(userKey interface{}) {
 		return
 	}
 
-	h.quickVote.Add(userKey, false)
+	h.quickVote.Add(userKey, false, ext)
 }

@@ -4,7 +4,7 @@ type _DelayPlayerKickOut struct {
 	UserKey interface{}
 }
 
-func (h *_Happy) PlayerKickOut(userKey interface{}) {
+func (h *_Happy) PlayerKickOut(userKey interface{}, ext map[string]any) {
 	if h.curRound > 0 {
 		return
 	}
@@ -26,7 +26,7 @@ func (h *_Happy) PlayerKickOut(userKey interface{}) {
 	h.PlayerKickOutDel(userKey)
 	if !p.Line() {
 		h.delay.Add(ts, func(ts int64, args interface{}) {
-			h.MsgPlayerExitHandler(args.(*_DelayPlayerKickOut).UserKey)
+			h.MsgPlayerExitHandler(args.(*_DelayPlayerKickOut).UserKey, ext)
 		}, &_DelayPlayerKickOut{
 			UserKey: userKey,
 		})

@@ -122,7 +122,7 @@ func (h *_Happy) Init() error {
 			}
 
 			p.SetOp(false, nil)
-			h.game.PlayerAuto(key)
+			h.game.PlayerAuto(h.begin, key)
 		},
 	})
 

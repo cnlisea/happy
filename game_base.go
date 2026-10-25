@@ -29,7 +29,7 @@ func (g *GameBase) PlayerMaxNum() int {
 
 func (g *GameBase) PlayerJoin(userKey interface{}, exist bool, view bool) {}
 
-func (g *GameBase) PlayerOp(userKey interface{}, exist bool, view bool) {}
+func (g *GameBase) PlayerOp(begin bool, userKey interface{}, exist bool, view bool) {}
 
 func (g *GameBase) PlayerExit(userKey interface{}, view bool) {}
 
@@ -37,7 +37,7 @@ func (g *GameBase) PlayerOfflineKickOut() time.Duration {
 	return 0
 }
 
-func (g *GameBase) PlayerAuto(userKey interface{}) {}
+func (g *GameBase) PlayerAuto(begin bool, userKey interface{}) {}
 
 func (g *GameBase) Msg(begin bool, userKey interface{}, data interface{}, ext map[string]any) {}
 

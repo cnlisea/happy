@@ -17,10 +17,10 @@ type Game interface {
 	Init(ctx context.Context, delay GameDelay, pMgr GamePMgr, pMsg PlayerMsg, log GameLog) error
 	PlayerMaxNum() int
 	PlayerJoin(userKey interface{}, exist bool, view bool)
-	PlayerOp(userKey interface{}, exist bool, view bool)
+	PlayerOp(begin bool, userKey interface{}, exist bool, view bool)
 	PlayerExit(userKey interface{}, view bool)
 	PlayerOfflineKickOut() time.Duration
-	PlayerAuto(userKey interface{})
+	PlayerAuto(begin bool, userKey interface{})
 	Msg(begin bool, userKey interface{}, data interface{}, ext map[string]any)
 	Begin(quick bool, round, maxRound uint32)
 	End(round, maxRound uint32)

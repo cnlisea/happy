@@ -91,7 +91,7 @@ func Test_Happy_EventPlayerJoinSuccess(t *testing.T) {
 	h := New(nil, 1, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		PlayerJoinSuccess: func(h Happy, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
+		PlayerJoinSuccess: func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
 			t.Log("user join success", key, pMgr.Len())
 		},
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
@@ -126,7 +126,7 @@ func Test_Happy_EventPlayerJoinFail_Full(t *testing.T) {
 	h := New(nil, 1, new(EventPlayerJoinFailGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
+		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("join fail", key, kind)
 		},
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
@@ -161,7 +161,7 @@ func Test_Happy_EventPlayerJoinFail_ViewOff(t *testing.T) {
 	h := New(nil, 1, new(EventPlayerJoinFailGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
+		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("join fail", key, view, kind)
 		},
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
@@ -220,7 +220,7 @@ func Test_Happy_EventPlayerJoinFail_LocationOff(t *testing.T) {
 	h := New(nil, 1, new(EventPlayerJoinFailGameLocationOff), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
+		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("join fail", key, view, kind)
 		},
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
@@ -263,7 +263,7 @@ func Test_Happy_EventPlayerJoinFail_LocationIpSame(t *testing.T) {
 	h := New(nil, 1, new(EventPlayerJoinFailGameLocationIpSame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
+		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("join fail", key, view, kind)
 		},
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
@@ -318,7 +318,7 @@ func Test_Happy_EventPlayerJoinFail_LocationTooClose(t *testing.T) {
 	h := New(nil, 1, new(EventPlayerJoinFailGameLocationTooClose), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
+		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("join fail", key, view, kind)
 		},
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
@@ -883,10 +883,10 @@ func Test_Happy_EventDisband(t *testing.T) {
 	h := New(nil, 1, new(EventDisbandGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		PlayerJoinSuccess: func(h Happy, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
+		PlayerJoinSuccess: func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
 			t.Log("player join success", key, pMgr.Len())
 		},
-		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
+		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("player join fail", key, view, kind)
 		},
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -966,10 +966,10 @@ func Test_Happy_EventQuick(t *testing.T) {
 	h := New(nil, 1, new(EventQuickGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		PlayerJoinSuccess: func(h Happy, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
+		PlayerJoinSuccess: func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
 			t.Log("player join success", key, pMgr.Len())
 		},
-		PlayerJoinFail: func(h Happy, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
+		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
 			t.Log("player join fail", key, kind)
 		},
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {

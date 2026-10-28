@@ -23,7 +23,7 @@ func Test_Happy_RoundBeginPolicyFullPlayer(t *testing.T) {
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("round begin", curRound, maxRound, pMgr.Len())
 		},
-		PlayerJoinSuccess: func(h Happy, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
+		PlayerJoinSuccess: func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
 			t.Log("user join", key, pMgr.Get(key))
 		},
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
@@ -53,7 +53,7 @@ func Test_Happy_RoundBeginPolicyAllPlayerReady(t *testing.T) {
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("round begin", curRound, maxRound, pMgr.Len())
 		},
-		PlayerJoinSuccess: func(h Happy, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
+		PlayerJoinSuccess: func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
 			t.Log("user join", key, pMgr.Get(key))
 		},
 		PlayerReady: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {

@@ -19,7 +19,7 @@ import (
 type Happy interface {
 	Context() context.Context
 	Init() error
-	Resume(begin bool, curRound uint32)
+	Resume(begin bool, curRound uint32, pMgr *pmgr.PMgr)
 	Run(resume bool)
 	Cost(mode CostMode)
 	Event(e *Event)
@@ -75,9 +75,10 @@ func (h *_Happy) Context() context.Context {
 	return h.ctx
 }
 
-func (h *_Happy) Resume(begin bool, curRound uint32) {
+func (h *_Happy) Resume(begin bool, curRound uint32, pMgr *pmgr.PMgr) {
 	h.begin = begin
 	h.curRound = curRound
+	h.pMgr = pMgr
 }
 
 func (h *_Happy) Init() error {
@@ -125,6 +126,9 @@ func (h *_Happy) Init() error {
 		},
 	})
 
+	if h.pMgr == nil {
+		h.pMgr = pmgr.New()
+	}
 	h.pMgr.Watch(pmgr.WatchKindLine, func(key interface{}, p *player.Player, ext map[string]any) {
 		if h.event != nil && h.event.PlayerLine != nil {
 			h.event.PlayerLine(h, key, h.pMgr, h.CopyExtend(ext))

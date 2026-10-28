@@ -233,7 +233,7 @@ Loop:
 		case <-h.delay.Done():
 			h.delay.Handler()
 		case <-h.ctx.Done():
-			h.Finish(false, false, nil)
+			h.Finish(true, false, nil)
 		}
 	}
 }

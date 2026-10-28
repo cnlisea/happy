@@ -35,40 +35,39 @@ type Happy interface {
 }
 
 type _Happy struct {
-	ctx                context.Context
-	delay              *delay.Delay
-	heartbeat          *heartbeat.Heartbeat
-	pMgr               *pmgr.PMgr
-	event              *Event
-	plugin             *Plugin
-	costMode           CostMode
-	auto               *auto.Auto
-	disbandVote        *vote.Vote
-	quickVote          *vote.Vote
-	msgChan            chan *proxy.Msg
-	byUserHandler      func(userKey interface{}, data interface{}, delay proxy.Delay, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{})
-	playerMsg          proxy.PlayerMsg
-	roundBeginPolicy   RoundBeginPolicy
-	ownerUserKey       interface{}
-	game               proxy.Game
-	begin              bool
-	curRound, maxRound uint32
-	extend             map[string]interface{}
-	log                *log.Logger
+	ctx              context.Context
+	delay            *delay.Delay
+	heartbeat        *heartbeat.Heartbeat
+	pMgr             *pmgr.PMgr
+	event            *Event
+	plugin           *Plugin
+	costMode         CostMode
+	auto             *auto.Auto
+	disbandVote      *vote.Vote
+	quickVote        *vote.Vote
+	msgChan          chan *proxy.Msg
+	byUserHandler    func(userKey interface{}, data interface{}, delay proxy.Delay, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{})
+	playerMsg        proxy.PlayerMsg
+	roundBeginPolicy RoundBeginPolicy
+	ownerUserKey     interface{}
+	game             proxy.Game
+	begin            bool
+	curRound         uint32
+	extend           map[string]interface{}
+	log              *log.Logger
 }
 
-func New(ctx context.Context, maxRound uint32, game proxy.Game, extend map[string]interface{}) Happy {
+func New(ctx context.Context, game proxy.Game, extend map[string]interface{}) Happy {
 	if ctx == nil {
 		ctx = context.Background()
 	}
 	return &_Happy{
-		ctx:      ctx,
-		delay:    delay.New(),
-		pMgr:     pmgr.New(),
-		msgChan:  make(chan *proxy.Msg, 100),
-		game:     game,
-		maxRound: maxRound,
-		extend:   extend,
+		ctx:     ctx,
+		delay:   delay.New(),
+		pMgr:    pmgr.New(),
+		msgChan: make(chan *proxy.Msg, 100),
+		game:    game,
+		extend:  extend,
 	}
 }
 

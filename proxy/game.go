@@ -21,6 +21,7 @@ type Game interface {
 	PlayerExit(userKey interface{}, view bool)
 	PlayerOfflineKickOut() time.Duration
 	PlayerAuto(begin bool, userKey interface{})
+	RoundNum() uint32
 	Msg(begin bool, userKey interface{}, data interface{}, ext map[string]any)
 	Begin(quick bool, round, maxRound uint32)
 	End(round, maxRound uint32)

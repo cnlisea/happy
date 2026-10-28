@@ -14,5 +14,5 @@ func (h *_Happy) MsgByUserHandler(userKey interface{}, data interface{}, ext map
 		return
 	}
 
-	h.byUserHandler(userKey, data, h.delay, h.begin, h.curRound, h.maxRound, h.pMgr, h.CopyExtend(ext))
+	h.byUserHandler(userKey, data, h.delay, h.begin, h.curRound, h.game.RoundNum(), h.pMgr, h.CopyExtend(ext))
 }

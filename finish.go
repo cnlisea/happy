@@ -14,7 +14,7 @@ func (h *_Happy) Finish(disband bool, owner bool, ext map[string]any) {
 	}
 
 	if h.event != nil && h.event.Finish != nil {
-		h.event.Finish(h, h.begin, h.curRound, h.maxRound, h.pMgr, disband, owner, h.CopyExtend(ext))
+		h.event.Finish(h, h.begin, h.curRound, h.game.RoundNum(), h.pMgr, disband, owner, h.CopyExtend(ext))
 	}
 
 	if h.msgChan != nil {

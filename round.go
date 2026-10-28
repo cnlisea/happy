@@ -33,14 +33,14 @@ func (h *_Happy) RoundBegin(resume bool, quick bool) {
 	h.curRound++
 
 	if h.event != nil && h.event.RoundBegin != nil {
-		h.event.RoundBegin(h, h.curRound, h.maxRound, h.pMgr, h.extend)
+		h.event.RoundBegin(h, h.curRound, h.game.RoundNum(), h.pMgr, h.extend)
 	}
 	if !resume && h.costMode == CostModeFirstRoundBegin || h.costMode == CostModeRoundBegin {
 		if h.event != nil && h.event.Cost != nil {
 			h.event.Cost(h, h.costMode, false, h.pMgr, h.extend)
 		}
 	}
-	h.game.Begin(quick, h.curRound, h.maxRound)
+	h.game.Begin(quick, h.curRound, h.game.RoundNum())
 }
 
 func (h *_Happy) RoundEnd() {
@@ -50,7 +50,7 @@ func (h *_Happy) RoundEnd() {
 
 	h.begin = false
 	if h.event != nil && h.event.RoundEnd != nil {
-		h.event.RoundEnd(h, h.curRound, h.maxRound, h.pMgr, h.extend)
+		h.event.RoundEnd(h, h.curRound, h.game.RoundNum(), h.pMgr, h.extend)
 	}
 
 	if h.costMode == CostModeFirstRoundEnd || h.costMode == CostModeRoundEnd {
@@ -58,9 +58,9 @@ func (h *_Happy) RoundEnd() {
 			h.event.Cost(h, h.costMode, false, h.pMgr, h.extend)
 		}
 	}
-	h.game.End(h.curRound, h.maxRound)
+	h.game.End(h.curRound, h.game.RoundNum())
 
-	if h.curRound == h.maxRound {
+	if h.curRound == h.game.RoundNum() {
 		h.Finish(false, false, nil)
 	}
 }

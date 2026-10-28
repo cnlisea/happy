@@ -136,7 +136,7 @@ func (h *_Happy) Init() error {
 	})
 	h.pMgr.Watch(pmgr.WatchKindReady, func(key interface{}, p *player.Player, ext map[string]any) {
 		if h.event != nil && h.event.PlayerReady != nil {
-			h.event.PlayerReady(h, key, h.pMgr, h.CopyExtend(ext))
+			h.event.PlayerReady(h, h.begin, key, h.pMgr, h.CopyExtend(ext))
 		}
 	})
 	h.pMgr.Watch(pmgr.WatchKindOp, func(key interface{}, p *player.Player, ext map[string]any) {

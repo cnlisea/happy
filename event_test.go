@@ -404,8 +404,8 @@ func Test_Happy_EventPlayerReady(t *testing.T) {
 	h := New(nil, 1, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
-		PlayerReady: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
-			t.Log("player ready", key, pMgr.Get(key).Ready(), pMgr.Len())
+		PlayerReady: func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
+			t.Log("player ready", begin, key, pMgr.Get(key).Ready(), pMgr.Len())
 		},
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())

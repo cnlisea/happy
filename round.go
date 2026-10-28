@@ -20,6 +20,7 @@ func (h *_Happy) RoundBegin(resume bool, quick bool) {
 		return
 	}
 
+	h.begin = true
 	h.pMgr.Range(func(key interface{}, p *player.Player) bool {
 		p.SetReady(false, nil)
 		return true
@@ -29,9 +30,8 @@ func (h *_Happy) RoundBegin(resume bool, quick bool) {
 	if h.curRound == 0 {
 		h.PlayerKickOutClean()
 	}
-
-	h.begin = true
 	h.curRound++
+
 	if h.event != nil && h.event.RoundBegin != nil {
 		h.event.RoundBegin(h, h.curRound, h.maxRound, h.pMgr, h.extend)
 	}

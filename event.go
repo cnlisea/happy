@@ -22,7 +22,7 @@ type Event struct {
 	PlayerJoinFail    func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{})
 	PlayerExit        func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerKickOut     func(h Happy, key interface{}, data interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
-	PlayerReady       func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
+	PlayerReady       func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerLine        func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerOp          func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerAuto        func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})

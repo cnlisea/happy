@@ -30,7 +30,7 @@ type Happy interface {
 	PlayerMsg(msg proxy.PlayerMsg)
 	Plugin(p *Plugin)
 	RoundBeginPolicy(policy RoundBeginPolicy)
-	LogSetting(path string, level log.Level) error
+	LogSetting(path string, level log.Level, callerSkip int) error
 	Log() *log.Logger
 }
 
@@ -172,7 +172,7 @@ func (h *_Happy) Init() error {
 	})
 
 	if h.log == nil {
-		if err := h.LogSetting("", log.LevelDebug); err != nil {
+		if err := h.LogSetting("", log.LevelDebug, 0); err != nil {
 			return err
 		}
 	}

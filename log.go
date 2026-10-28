@@ -4,8 +4,8 @@ import (
 	"github.com/cnlisea/happy/log"
 )
 
-func (h *_Happy) LogSetting(path string, level log.Level) error {
-	instance, err := log.NewLogger(log.EncodingJson, path, level, 0)
+func (h *_Happy) LogSetting(path string, level log.Level, callerSkip int) error {
+	instance, err := log.NewLogger(log.EncodingJson, path, level, callerSkip)
 	if err != nil {
 		return err
 	}

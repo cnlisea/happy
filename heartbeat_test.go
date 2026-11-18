@@ -9,7 +9,7 @@ import (
 )
 
 func Test_Happy_Heartbeat(t *testing.T) {
-	h := New(nil, 1, new(GameBase), nil)
+	h := New(nil, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
@@ -23,7 +23,7 @@ func Test_Happy_Heartbeat(t *testing.T) {
 }
 
 func Test_Happy_HeartbeatMsg(t *testing.T) {
-	h := New(nil, 1, new(GameBase), nil)
+	h := New(nil, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {

@@ -15,7 +15,7 @@ type Vote struct {
 	passFn   []func(ts int64)
 	failFn   []func(ts int64)
 	cancelFn []func(ts int64)
-	addFn    []func(ts time.Duration, deadlineTs int64, key interface{}, agree bool, ext map[string]any)
+	addFn    []func(ts time.Duration, deadlineTs int64, pass, fail bool, key interface{}, agree bool, ext map[string]any)
 
 	delay         proxy.Delay
 	deadline      bool
@@ -65,7 +65,7 @@ func (v *Vote) CallbackCancel(f ...func(ts int64)) {
 	v.cancelFn = f
 }
 
-func (v *Vote) CallbackAdd(f ...func(ts time.Duration, deadlineTs int64, key interface{}, agree bool, ext map[string]any)) {
+func (v *Vote) CallbackAdd(f ...func(ts time.Duration, deadlineTs int64, pass, fail bool, key interface{}, agree bool, ext map[string]any)) {
 	v.addFn = f
 }
 
@@ -130,7 +130,15 @@ func (v *Vote) Add(key interface{}, agree bool, ext map[string]any) {
 	}
 
 	for i := range v.addFn {
-		v.addFn[i](v.deadlineTs, v.deadlineEndTs, key, agree, ext)
+		v.addFn[i](
+			v.deadlineTs,
+			v.deadlineEndTs,
+			len(v.agree) == cap(v.agree),
+			len(v.reject) == cap(v.reject),
+			key,
+			agree,
+			ext,
+		)
 	}
 
 	v.Full(false, time.Now().UnixNano())

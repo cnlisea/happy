@@ -17,7 +17,7 @@ func (g *RoundBeginPolicyFullPlayerGame) PlayerMaxNum() int {
 }
 
 func Test_Happy_RoundBeginPolicyFullPlayer(t *testing.T) {
-	h := New(nil, 1, new(RoundBeginPolicyFullPlayerGame), nil)
+	h := New(nil, new(RoundBeginPolicyFullPlayerGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -47,7 +47,7 @@ func Test_Happy_RoundBeginPolicyFullPlayer(t *testing.T) {
 }
 
 func Test_Happy_RoundBeginPolicyAllPlayerReady(t *testing.T) {
-	h := New(nil, 1, new(RoundBeginPolicyFullPlayerGame), nil)
+	h := New(nil, new(RoundBeginPolicyFullPlayerGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {

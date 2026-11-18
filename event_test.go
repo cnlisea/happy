@@ -10,7 +10,7 @@ import (
 )
 
 func Test_Happy_EventRoundBegin(t *testing.T) {
-	h := New(nil, 1, new(GameBase), nil)
+	h := New(nil, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -48,12 +48,12 @@ type EventRoundEndGame struct {
 	GameBase
 }
 
-func (g *EventRoundEndGame) Begin(quick bool) {
+func (g *EventRoundEndGame) Begin(quick bool, a uint32, b uint32) {
 	g.GameEnd()
 }
 
 func Test_Happy_EventRoundEnd(t *testing.T) {
-	h := New(nil, 1, new(EventRoundEndGame), nil)
+	h := New(nil, new(EventRoundEndGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		RoundEnd: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -88,7 +88,7 @@ func Test_Happy_EventRoundEnd(t *testing.T) {
 }
 
 func Test_Happy_EventPlayerJoinSuccess(t *testing.T) {
-	h := New(nil, 1, new(GameBase), nil)
+	h := New(nil, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerJoinSuccess: func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
@@ -123,7 +123,7 @@ func (g *EventPlayerJoinFailGame) PlayerMaxNum() int {
 }
 
 func Test_Happy_EventPlayerJoinFail_Full(t *testing.T) {
-	h := New(nil, 1, new(EventPlayerJoinFailGame), nil)
+	h := New(nil, new(EventPlayerJoinFailGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
@@ -158,7 +158,7 @@ func Test_Happy_EventPlayerJoinFail_Full(t *testing.T) {
 }
 
 func Test_Happy_EventPlayerJoinFail_ViewOff(t *testing.T) {
-	h := New(nil, 1, new(EventPlayerJoinFailGame), nil)
+	h := New(nil, new(EventPlayerJoinFailGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
@@ -217,7 +217,7 @@ func (g *EventPlayerJoinFailGameLocationOff) IpLimit() bool {
 }
 
 func Test_Happy_EventPlayerJoinFail_LocationOff(t *testing.T) {
-	h := New(nil, 1, new(EventPlayerJoinFailGameLocationOff), nil)
+	h := New(nil, new(EventPlayerJoinFailGameLocationOff), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
@@ -260,7 +260,7 @@ func (g *EventPlayerJoinFailGameLocationIpSame) IpLimit() bool {
 }
 
 func Test_Happy_EventPlayerJoinFail_LocationIpSame(t *testing.T) {
-	h := New(nil, 1, new(EventPlayerJoinFailGameLocationIpSame), nil)
+	h := New(nil, new(EventPlayerJoinFailGameLocationIpSame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
@@ -315,7 +315,7 @@ func (g *EventPlayerJoinFailGameLocationTooClose) DistanceLimit() int {
 }
 
 func Test_Happy_EventPlayerJoinFail_LocationTooClose(t *testing.T) {
-	h := New(nil, 1, new(EventPlayerJoinFailGameLocationTooClose), nil)
+	h := New(nil, new(EventPlayerJoinFailGameLocationTooClose), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerJoinFail: func(h Happy, begin bool, key interface{}, view bool, kind EventPlayerJoinFailKind, extend map[string]interface{}) {
@@ -370,7 +370,7 @@ func Test_Happy_EventPlayerJoinFail_LocationTooClose(t *testing.T) {
 }
 
 func Test_Happy_EventPlayerExit(t *testing.T) {
-	h := New(nil, 1, new(GameBase), nil)
+	h := New(nil, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerExit: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -401,7 +401,7 @@ func Test_Happy_EventPlayerExit(t *testing.T) {
 }
 
 func Test_Happy_EventPlayerReady(t *testing.T) {
-	h := New(nil, 1, new(GameBase), nil)
+	h := New(nil, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerReady: func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -435,7 +435,7 @@ func Test_Happy_EventPlayerReady(t *testing.T) {
 }
 
 func Test_Happy_EventPlayerLine(t *testing.T) {
-	h := New(nil, 1, new(GameBase), nil)
+	h := New(nil, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerLine: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -465,7 +465,7 @@ func Test_Happy_EventPlayerLine(t *testing.T) {
 }
 
 func Test_Happy_EventPlayerOp(t *testing.T) {
-	h := New(nil, 1, new(GameBase), nil)
+	h := New(nil, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerOp: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -497,7 +497,7 @@ func Test_Happy_EventPlayerOp(t *testing.T) {
 }
 
 func Test_Happy_EventPlayerAuto(t *testing.T) {
-	h := New(nil, 1, new(GameBase), nil)
+	h := New(nil, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerAuto: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -537,7 +537,7 @@ func (g *EventPlayerSite) PlayerMaxNum() int {
 }
 
 func Test_Happy_EventPlayerSite(t *testing.T) {
-	h := New(nil, 1, new(EventPlayerSite), nil)
+	h := New(nil, new(EventPlayerSite), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerSite: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -571,7 +571,7 @@ func Test_Happy_EventPlayerSite(t *testing.T) {
 }
 
 func Test_Happy_EventPlayerScore(t *testing.T) {
-	h := New(nil, 1, new(GameBase), nil)
+	h := New(nil, new(GameBase), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerScore: func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -608,7 +608,7 @@ func (g *EventCostGame) PlayerMaxNum() int {
 }
 
 func Test_Happy_EventCost_Join(t *testing.T) {
-	h := New(nil, 1, new(EventCostGame), nil)
+	h := New(nil, new(EventCostGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		Cost: func(h Happy, mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -636,7 +636,7 @@ func Test_Happy_EventCost_Join(t *testing.T) {
 }
 
 func Test_Happy_EventCost_FirstRoundBegin(t *testing.T) {
-	h := New(nil, 1, new(EventCostGame), nil)
+	h := New(nil, new(EventCostGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		Cost: func(h Happy, mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -672,12 +672,12 @@ func (g *EventCostFirstRoundEndGame) PlayerMaxNum() int {
 	return 1
 }
 
-func (g *EventCostFirstRoundEndGame) Begin(quick bool) {
+func (g *EventCostFirstRoundEndGame) Begin(quick bool, a uint32, b uint32) {
 	g.GameEnd()
 }
 
 func Test_Happy_EventCost_FirstRoundEnd(t *testing.T) {
-	h := New(nil, 1, new(EventCostFirstRoundEndGame), nil)
+	h := New(nil, new(EventCostFirstRoundEndGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		Cost: func(h Happy, mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -713,12 +713,12 @@ func (g *EventCostRoundBeginGame) PlayerMaxNum() int {
 	return 1
 }
 
-func (g *EventCostRoundBeginGame) Begin(quick bool) {
+func (g *EventCostRoundBeginGame) Begin(quick bool, a uint32, b uint32) {
 	g.GameEnd()
 }
 
 func Test_Happy_EventCost_RoundBegin(t *testing.T) {
-	h := New(nil, 2, new(EventCostRoundBeginGame), nil)
+	h := New(nil, new(EventCostRoundBeginGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -767,12 +767,12 @@ func (g *EventCostRoundEndGame) PlayerMaxNum() int {
 	return 1
 }
 
-func (g *EventCostRoundEndGame) Begin(quick bool) {
+func (g *EventCostRoundEndGame) Begin(quick bool, a uint32, b uint32) {
 	g.GameEnd()
 }
 
 func Test_Happy_EventCost_RoundEnd(t *testing.T) {
-	h := New(nil, 2, new(EventCostRoundEndGame), nil)
+	h := New(nil, new(EventCostRoundEndGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -821,12 +821,12 @@ func (g *EventCostFinishGame) PlayerMaxNum() int {
 	return 1
 }
 
-func (g *EventCostFinishGame) Begin(quick bool) {
+func (g *EventCostFinishGame) Begin(quick bool, a uint32, b uint32) {
 	g.GameEnd()
 }
 
 func Test_Happy_EventCost_Finish(t *testing.T) {
-	h := New(nil, 2, new(EventCostFinishGame), nil)
+	h := New(nil, new(EventCostFinishGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		RoundBegin: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
@@ -880,7 +880,7 @@ func (g *EventDisbandGame) DisbandTs() time.Duration {
 }
 
 func Test_Happy_EventDisband(t *testing.T) {
-	h := New(nil, 1, new(EventDisbandGame), nil)
+	h := New(nil, new(EventDisbandGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerJoinSuccess: func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
@@ -898,10 +898,10 @@ func Test_Happy_EventDisband(t *testing.T) {
 		Finish: func(h Happy, begin bool, curRound, maxRound uint32, pMgr *pmgr.PMgr, disband bool, owner bool, extend map[string]interface{}) {
 			t.Log("finish", time.Now().Unix())
 		},
-		DisbandAgree: func(h Happy, ts time.Duration, deadlineTs int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+		DisbandAgree: func(h Happy, ts time.Duration, deadlineTs int64, p, f bool, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
 			t.Log("disband agree", ts, deadlineTs, userKey, pMgr.Len(), op)
 		},
-		DisbandReject: func(h Happy, ts time.Duration, deadlineTs int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+		DisbandReject: func(h Happy, ts time.Duration, deadlineTs int64, p, f bool, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
 			t.Log("disband reject", ts, deadlineTs, userKey, pMgr.Len(), op)
 		},
 		DisbandPass: func(h Happy, deadlineTs int64, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
@@ -963,7 +963,7 @@ func (g *EventQuickGame) QuickTs() time.Duration {
 }
 
 func Test_Happy_EventQuick(t *testing.T) {
-	h := New(nil, 1, new(EventQuickGame), nil)
+	h := New(nil, new(EventQuickGame), nil)
 	h.Heartbeat(3 * time.Second)
 	h.Event(&Event{
 		PlayerJoinSuccess: func(h Happy, begin bool, key interface{}, pMgr *pmgr.PMgr, alreadyExist bool, extend map[string]interface{}) {
@@ -978,10 +978,10 @@ func Test_Happy_EventQuick(t *testing.T) {
 		RoundEnd: func(h Happy, curRound, maxRound uint32, pMgr *pmgr.PMgr, extend map[string]interface{}) {
 			t.Log("round end", curRound, maxRound)
 		},
-		QuickAgree: func(h Happy, ts time.Duration, deadlineTs int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+		QuickAgree: func(h Happy, ts time.Duration, deadlineTs int64, p, f bool, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
 			t.Log("quick agree", ts, deadlineTs, userKey, pMgr.Len(), op)
 		},
-		QuickReject: func(h Happy, ts time.Duration, deadlineTs int64, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
+		QuickReject: func(h Happy, ts time.Duration, deadlineTs int64, p, f bool, userKey interface{}, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {
 			t.Log("quick reject", ts, deadlineTs, userKey, pMgr.Len(), op)
 		},
 		QuickPass: func(h Happy, deadlineTs int64, pMgr *pmgr.PMgr, op map[interface{}]bool, extend map[string]interface{}) {

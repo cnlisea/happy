@@ -13,9 +13,9 @@ func (h *_Happy) CopyExtend(ext map[string]any) map[string]any {
 		return h.extend
 	}
 
-	for k, v := range h.extend {
-		ext[k] = v
+	for k, v := range ext {
+		h.extend[k] = v
 	}
 
-	return ext
+	return h.extend
 }

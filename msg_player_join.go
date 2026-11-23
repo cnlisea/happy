@@ -145,6 +145,12 @@ func (h *_Happy) MsgPlayerJoinHandler(userKey interface{}, p *player.Player, ext
 		if h.costMode == CostModeJoin && h.event != nil && h.event.Cost != nil {
 			h.event.Cost(h, h.costMode, false, h.pMgr, h.extend)
 		}
+	} else {
+		if p.Line() {
+			existPlayer.Online(nil)
+		} else {
+			existPlayer.Offline(p.OfflineTs(), nil)
+		}
 	}
 
 	// clean player delay msg

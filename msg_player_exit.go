@@ -22,7 +22,7 @@ func (h *_Happy) MsgPlayerExitHandler(userKey interface{}, ext map[string]any) {
 
 		if h.pMgr.Len(func(p *player.Player) bool {
 			return !p.View()
-		}) == 0 {
+		}) == 1 {
 			h.Finish(true, false, h.CopyExtend(ext))
 			return
 		}

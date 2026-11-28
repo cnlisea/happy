@@ -14,11 +14,7 @@ func (h *_Happy) AutoPlayer(userKey interface{}) {
 		return
 	}
 
-	auto := p.Auto()
-	h.auto.Add(userKey, auto)
-	if !auto {
-		p.SetAutoTs(h.auto.AutoTs(userKey, false), nil)
-	}
+	h.auto.Add(userKey, p.Auto())
 }
 
 func (h *_Happy) AutoPlayerDel(userKey interface{}) {
@@ -36,5 +32,22 @@ func (h *_Happy) AutoPlayerDel(userKey interface{}) {
 	}
 
 	h.auto.Del(userKey)
-	p.SetAutoTs(0, nil)
+}
+
+func (h *_Happy) AutoPlayerTs(userKey interface{}) (bool, bool, int64) {
+	if h.game.Auto() == nil {
+		return false, false, 0
+	}
+
+	p := h.pMgr.Get(userKey)
+	if p == nil {
+		return false, false, 0
+	}
+
+	if p.View() {
+		return false, false, 0
+	}
+
+	op, deadlineTs := h.auto.AutoTs(userKey)
+	return deadlineTs != 0, op, deadlineTs
 }

@@ -1,7 +1,5 @@
 package player
 
-import "time"
-
 func (p *Player) Auto() bool {
 	return p.state&8 == 8
 }
@@ -26,13 +24,13 @@ func (p *Player) WatchAuto(f func(*Player, map[string]any)) {
 	p.watch["auto"] = f
 }
 
-func (p *Player) AutoTs() time.Duration {
+func (p *Player) AutoTs() int64 {
 	val := p.extend["_auto_ts"]
 	if val == nil {
 		return 0
 	}
 
-	ts, ok := val.(time.Duration)
+	ts, ok := val.(int64)
 	if !ok {
 		return 0
 	}
@@ -40,7 +38,7 @@ func (p *Player) AutoTs() time.Duration {
 	return ts
 }
 
-func (p *Player) SetAutoTs(ts time.Duration, ext map[string]any) {
+func (p *Player) SetAutoTs(ts int64, ext map[string]any) {
 	if p.AutoTs() == ts {
 		return
 	}

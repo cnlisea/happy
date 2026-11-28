@@ -80,6 +80,24 @@ func (pm *PMgr) Add(key interface{}, p *player.Player) {
 					watch(key, p, ext)
 				}
 			}(key, watch))
+		case WatchKindAutoReady:
+			newPlayer.WatchAutoReady(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
+				}
+			}(key, watch))
+		case WatchKindAutoOp:
+			newPlayer.WatchAutoOp(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
+				}
+			}(key, watch))
+		case WatchKindAutoOpReady:
+			newPlayer.WatchAutoOpReady(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
+				return func(p *player.Player, ext map[string]any) {
+					watch(key, p, ext)
+				}
+			}(key, watch))
 		case WatchKindLocation:
 			newPlayer.WatchLocation(func(key interface{}, watch Watch) func(*player.Player, map[string]any) {
 				return func(p *player.Player, ext map[string]any) {

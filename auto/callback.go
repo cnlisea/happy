@@ -1,15 +1,17 @@
 package auto
 
+import "time"
+
 type Callback struct {
+	// 准备
+	ReadyAuto func(key interface{}, ts time.Duration, deadlineTs int64)
+	ReadyOp   func(key interface{}, ts time.Duration, deadlineTs int64)
+
 	// 托管进入
-	AutoPre   func(key interface{})
-	Auto      func(key interface{})
-	AutoAfter func(key interface{})
+	Auto func(ts int64, key interface{})
 
 	// 托管操作
-	OpPre   func(key interface{})
-	Op      func(key interface{})
-	opAfter func(key interface{})
+	Op func(ts int64, key interface{})
 }
 
 func (a *Auto) Callback(cb *Callback) {

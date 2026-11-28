@@ -98,7 +98,21 @@ func (h *_Happy) Init() error {
 		return ts
 	})
 	h.auto.Callback(&auto.Callback{
-		Auto: func(key interface{}) {
+		ReadyAuto: func(key interface{}, ts time.Duration, deadlineTs int64) {
+			p := h.pMgr.Get(key)
+			if p == nil {
+				return
+			}
+			p.SetAutoReady(ts, deadlineTs, nil)
+		},
+		ReadyOp: func(key interface{}, ts time.Duration, deadlineTs int64) {
+			p := h.pMgr.Get(key)
+			if p == nil {
+				return
+			}
+			p.SetAutoOpReady(ts, deadlineTs, nil)
+		},
+		Auto: func(ts int64, key interface{}) {
 			p := h.pMgr.Get(key)
 			if p == nil {
 				return
@@ -108,10 +122,10 @@ func (h *_Happy) Init() error {
 				return
 			}
 
+			p.SetAutoTs(ts, nil)
 			p.SetAuto(true, nil)
-			p.SetAutoTs(0, nil)
 		},
-		Op: func(key interface{}) {
+		Op: func(ts int64, key interface{}) {
 			p := h.pMgr.Get(key)
 			if p == nil {
 				return
@@ -121,8 +135,9 @@ func (h *_Happy) Init() error {
 				return
 			}
 
-			p.SetOp(false, nil)
+			p.SetAutoOp(ts, nil)
 			h.game.PlayerAuto(h.begin, key)
+			p.SetOp(false, nil)
 		},
 	})
 
@@ -162,6 +177,23 @@ func (h *_Happy) Init() error {
 				h.AutoPlayerDel(key)
 				h.AutoPlayer(key)
 			}
+		}
+	})
+	h.pMgr.Watch(pmgr.WatchKindAutoOp, func(key interface{}, p *player.Player, ext map[string]any) {
+		if h.event != nil && h.event.PlayerAutoOp != nil {
+			h.event.PlayerAutoOp(h, key, h.pMgr, ext)
+		}
+	})
+	h.pMgr.Watch(pmgr.WatchKindAutoReady, func(key interface{}, p *player.Player, ext map[string]any) {
+		if h.event != nil && h.event.PlayerAutoReady != nil {
+			ts, deadline := p.AutoReady()
+			h.event.PlayerAutoReady(h, key, h.pMgr, false, ts, deadline, ext)
+		}
+	})
+	h.pMgr.Watch(pmgr.WatchKindAutoOpReady, func(key interface{}, p *player.Player, ext map[string]any) {
+		if h.event != nil && h.event.PlayerAutoReady != nil {
+			ts, deadline := p.AutoOpReady()
+			h.event.PlayerAutoReady(h, key, h.pMgr, true, ts, deadline, ext)
 		}
 	})
 	h.pMgr.Watch(pmgr.WatchKindScore, func(key interface{}, p *player.Player, ext map[string]any) {

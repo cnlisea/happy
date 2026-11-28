@@ -26,6 +26,8 @@ type Event struct {
 	PlayerLine        func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerOp          func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerAuto        func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
+	PlayerAutoOp      func(h Happy, key interface{}, pMgr *pmgr.PMgr, extend map[string]interface{})
+	PlayerAutoReady   func(h Happy, key interface{}, pMgr *pmgr.PMgr, op bool, ts time.Duration, deadlineTs int64, extend map[string]interface{})
 	PlayerSite        func(h Happy, key interface{}, mgr *pmgr.PMgr, extend map[string]interface{})
 	PlayerScore       func(h Happy, key interface{}, mgr *pmgr.PMgr, extend map[string]interface{})
 	Cost              func(h Happy, mode CostMode, back bool, pMgr *pmgr.PMgr, extend map[string]interface{})
